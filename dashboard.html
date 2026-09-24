@@ -265,8 +265,7 @@
         
         const tagsHtml = (item.tags || []).map(t => `<span class="text-[10px] text-gray-400 bg-white/5 px-1.5 py-0.5 rounded font-mono">#${t}</span>`).join(" ");
 
-        // Clean poster path: convert .gif reference to .jpg for lightweight clean thumbnail
-        const thumbSrc = (item.poster || '').replace('.gif', '.jpg');
+        const thumbSrc = (item.poster || '').trim();
         const isHorizontal = listKey === 'horizontalVideos';
 
         row.innerHTML = `
@@ -374,7 +373,7 @@
     function updateModalThumbPreview(path) {
       const img = document.getElementById("modal-thumb-preview");
       const placeholder = document.getElementById("modal-thumb-placeholder");
-      const cleanPath = (path || '').trim().replace('.gif', '.jpg');
+      const cleanPath = (path || '').trim();
 
       if (cleanPath && cleanPath.length > 5) {
         img.src = cleanPath;

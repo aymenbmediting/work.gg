@@ -82,9 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const card = document.createElement("div");
     card.className = "flex-shrink-0 w-[240px] sm:w-[280px] group relative rounded-[2rem] bg-[#111] overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-lg carousel-card";
     
-    // Only use static JPG thumbnail
-    const gifPath = videoItem.poster || '';
-    const jpgPath = gifPath.replace('.gif', '.jpg');
+    const posterPath = videoItem.poster || '';
 
     card.innerHTML = `
       <!-- Video Container with 9:16 Aspect Ratio -->
@@ -92,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         <img 
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 carousel-img" 
-          src="${jpgPath}" 
+          src="${posterPath}" 
           alt="Video Thumbnail"
           loading="lazy">
 
@@ -153,9 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Changed back to w-full for grid layout
     card.className = "w-full group relative rounded-3xl bg-[#111] overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-lg";
 
-    // Only use static JPG thumbnail
-    const gifPath = videoItem.poster || '';
-    const jpgPath = gifPath.replace('.gif', '.jpg');
+    const posterPath = videoItem.poster || '';
 
     card.innerHTML = `
       <!-- Video Container with 16:9 Aspect Ratio -->
@@ -163,7 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
         
         <img 
           class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-          src="${jpgPath}" 
+          src="${posterPath}" 
           alt="Horizontal Video Thumbnail"
           loading="lazy">
 
