@@ -96,14 +96,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Hover Overlay with Play Button (Glassy & Subtle) -->
         <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center z-10 pointer-events-none">
-          <div class="w-16 h-16 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-white/80 group-hover:text-white group-hover:bg-white/20 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-[0_4_20px_rgba(0,0,0,0.3)]">
+          <div class="w-16 h-16 rounded-full bg-black/60 border border-white/20 text-white/80 group-hover:text-white group-hover:bg-white/20 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-[0_4_20px_rgba(0,0,0,0.3)]">
             <i data-lucide="play" class="w-6 h-6 ml-1 fill-current"></i>
           </div>
         </div>
 
         <!-- Top Gradient with Category Pill -->
         <div class="absolute top-0 inset-x-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/80 via-black/20 to-transparent z-10 pointer-events-none">
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-white/10 text-white border border-white/10 shadow-sm backdrop-blur-md">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-black/50 text-white border border-white/10 shadow-sm">
             ${videoItem.category}
           </span>
           <div class="flex gap-1.5">
