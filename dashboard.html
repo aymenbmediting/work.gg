@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aymen BM | Content Studio Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              purple: '#8b5cf6',
+              blue: '#3b82f6',
+              dark: '#050505'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #050505; color: #f3f4f6; }
+    .glass-panel {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(12px);
+    }
+    .custom-scroll::-webkit-scrollbar { width: 6px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 9999px; }
+  </style>
+</head>
+<body class="min-h-screen font-sans pb-24">
+
+  <!-- Top Sticky Navigation Bar -->
+  <nav class="sticky top-0 z-40 bg-[#0a0a0a]/90 backdrop-blur-md border-b border-white/10 px-6 py-4">
+    <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+      <div class="flex items-center gap-3">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <h1 class="text-xl font-bold tracking-wider uppercase text-white font-mono">Portfolio Studio</h1>
+        <span class="text-xs bg-white/10 text-gray-400 px-2.5 py-0.5 rounded-full">v2.0</span>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="/" target="_blank" class="px-4 py-2 text-xs font-semibold rounded-lg bg-white/5 hover:bg-white/10 border border-white/10 text-gray-300 transition flex items-center gap-1.5">
+          <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          View Live Site
+        </a>
+        <button onclick="exportData()" class="px-5 py-2 text-xs font-bold uppercase tracking-wider rounded-lg bg-emerald-500 hover:bg-emerald-400 text-black shadow-lg shadow-emerald-500/20 transition flex items-center gap-2">
+          <i data-lucide="save" class="w-4 h-4"></i>
+          Save & Export File
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-6xl mx-auto px-6 pt-8 space-y-10">
+
+    <!-- 1. Text & Profile Editor Section -->
+    <section class="glass-panel rounded-2xl p-6 sm:p-8 relative overflow-hidden">
+      <div class="flex items-center justify-between pb-6 border-b border-white/10 mb-6">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="user" class="w-5 h-5 text-purple-400"></i>
+            Website Text & Bio
+          </h2>
+          <p class="text-xs text-gray-400 mt-0.5">Customize your displayed name, personal bio, tools, and direct contacts.</p>
+        </div>
+      </div>
+
+      <div class="grid md:grid-cols-2 gap-6">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Display Name</label>
+          <input type="text" id="prof-name" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Contact Email</label>
+          <input type="email" id="prof-email" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">WhatsApp Link</label>
+          <input type="text" id="prof-whatsapp" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none transition">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Instagram Link</label>
+          <input type="text" id="prof-instagram" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none transition">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Core Arsenal (Tools / Software - comma separated)</label>
+          <input type="text" id="prof-tools" placeholder="DaVinci Resolve, After Effects, Photoshop" class="w-full bg-black/60 border border-white/10 rounded-xl px-4 py-2.5 text-sm text-white focus:border-purple-500 focus:outline-none transition">
+        </div>
+
+        <div class="md:col-span-2">
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Personal Bio Description</label>
+          <textarea id="prof-bio" rows="3" class="w-full bg-black/60 border border-white/10 rounded-xl p-4 text-sm text-white focus:border-purple-500 focus:outline-none transition leading-relaxed"></textarea>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Video Channels Grid -->
+    <div class="grid lg:grid-cols-2 gap-8">
+      
+      <!-- Vertical Reels -->
+      <section class="glass-panel rounded-2xl p-6 flex flex-col h-full">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="smartphone" class="w-5 h-5 text-purple-400"></i>
+              Social Media Reels (Vertical 9:16)
+            </h3>
+            <p class="text-xs text-gray-400">These stream continuously on the side carousel.</p>
+          </div>
+          <button onclick="openModal('socialMediaVideos')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-purple-600 hover:bg-purple-500 text-white transition flex items-center gap-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            Add Reel
+          </button>
+        </div>
+
+        <div id="vertical-list" class="space-y-3 flex-1 overflow-y-auto max-h-[600px] pr-1 custom-scroll">
+          <!-- Injected via JS -->
+        </div>
+      </section>
+
+      <!-- Horizontal Cinematic Grid -->
+      <section class="glass-panel rounded-2xl p-6 flex flex-col h-full">
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-white/10">
+          <div>
+            <h3 class="text-base font-bold text-white flex items-center gap-2">
+              <i data-lucide="monitor" class="w-5 h-5 text-blue-400"></i>
+              Cinematic Grid (Horizontal 16:9)
+            </h3>
+            <p class="text-xs text-gray-400">Showcased in the 2-column widescreen showcase.</p>
+          </div>
+          <button onclick="openModal('horizontalVideos')" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-blue-600 hover:bg-blue-500 text-white transition flex items-center gap-1">
+            <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+            Add Video
+          </button>
+        </div>
+
+        <div id="horizontal-list" class="space-y-3 flex-1 overflow-y-auto max-h-[600px] pr-1 custom-scroll">
+          <!-- Injected via JS -->
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- Add / Edit Modal Window -->
+  <div id="edit-modal" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[#0f0f0f] border border-white/15 w-full max-w-lg rounded-2xl p-6 sm:p-8 shadow-2xl relative">
+      <div class="flex justify-between items-center mb-6">
+        <h3 id="modal-title" class="text-lg font-bold text-white">Edit Video Details</h3>
+        <button onclick="closeModal()" class="text-gray-400 hover:text-white p-1">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="edit-form" class="space-y-4">
+        <input type="hidden" id="field-list-type">
+        <input type="hidden" id="field-index">
+        <input type="hidden" id="field-id">
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Title</label>
+          <input type="text" id="field-title" required placeholder="e.g. Night Prod REEL 1001" class="w-full bg-black border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:border-purple-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Category Pill</label>
+          <input type="text" id="field-category" required placeholder="e.g. Fashion Reel, Real Estate, Color Grade" class="w-full bg-black border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:border-purple-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Video Master MP4 Path</label>
+          <input type="text" id="field-src" required placeholder="assets/videos/your_video.mp4" class="w-full bg-black border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:border-purple-500 focus:outline-none">
+        </div>
+
+        <!-- Live Thumbnail Preview Box -->
+        <div class="flex items-center gap-4 p-3 bg-black/60 rounded-xl border border-white/10">
+          <div class="w-16 h-20 rounded-lg bg-[#181818] overflow-hidden flex-shrink-0 border border-white/10 relative flex items-center justify-center">
+            <img id="modal-thumb-preview" src="" alt="Preview" class="w-full h-full object-cover hidden">
+            <div id="modal-thumb-placeholder" class="text-gray-500 flex flex-col items-center gap-1">
+              <i data-lucide="image" class="w-5 h-5"></i>
+              <span class="text-[9px] uppercase tracking-wider">No Image</span>
+            </div>
+          </div>
+          <div class="flex-1">
+            <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1">Thumbnail Poster Path (JPG/GIF)</label>
+            <input type="text" id="field-poster" required placeholder="assets/thumbnails/your_thumbnail.jpg" class="w-full bg-black border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white font-mono focus:border-purple-500 focus:outline-none">
+            <p class="text-[11px] text-gray-500 mt-1">Live image updates above automatically</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-1.5">Tags (Hashtags without '#', separated by comma)</label>
+          <input type="text" id="field-tags" placeholder="Cinematic, ColorGrade, SpeedRamp" class="w-full bg-black border border-white/10 rounded-xl px-3.5 py-2 text-sm text-white focus:border-purple-500 focus:outline-none">
+          <p class="text-[11px] text-gray-500 mt-1">Example: <code class="text-purple-400">Viral, Fashion, 4K</code></p>
+        </div>
+
+        <div class="flex justify-end gap-3 pt-6 border-t border-white/10 mt-6">
+          <button type="button" onclick="closeModal()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-white/5 hover:bg-white/10 text-gray-300 transition">Cancel</button>
+          <button type="submit" class="px-5 py-2 rounded-xl text-xs font-bold uppercase tracking-wider bg-purple-600 hover:bg-purple-500 text-white transition">Confirm & Save</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Load current site data -->
+  <script src="assets/js/projects-data.js"></script>
+
+  <script>
+    // 1. Initial State Initialization
+    const rawData = window.PORTFOLIO_DATA || window.portfolioData || {};
+    let db = JSON.parse(JSON.stringify(rawData));
+
+    // Ensure structures exist
+    if (!db.profile) db.profile = {};
+    if (!db.profile.contact) db.profile.contact = {};
+    if (!db.socialMediaVideos) db.socialMediaVideos = [];
+    if (!db.horizontalVideos) db.horizontalVideos = [];
+
+    // 2. Populate Profile Fields
+    function populateProfileForm() {
+      document.getElementById("prof-name").value = db.profile.name || "";
+      document.getElementById("prof-email").value = db.profile.contact.email || "";
+      document.getElementById("prof-whatsapp").value = db.profile.contact.whatsapp || "";
+      document.getElementById("prof-instagram").value = db.profile.contact.instagram || "";
+      document.getElementById("prof-tools").value = (db.profile.tools || []).join(", ");
+      document.getElementById("prof-bio").value = db.profile.bio || "";
+    }
+
+    // Sync profile inputs on change
+    ["prof-name", "prof-email", "prof-whatsapp", "prof-instagram", "prof-tools", "prof-bio"].forEach(id => {
+      document.getElementById(id).addEventListener("input", () => {
+        db.profile.name = document.getElementById("prof-name").value.trim();
+        db.profile.contact.email = document.getElementById("prof-email").value.trim();
+        db.profile.contact.whatsapp = document.getElementById("prof-whatsapp").value.trim();
+        db.profile.contact.instagram = document.getElementById("prof-instagram").value.trim();
+        db.profile.tools = document.getElementById("prof-tools").value.split(",").map(s => s.trim()).filter(Boolean);
+        db.profile.bio = document.getElementById("prof-bio").value.trim();
+      });
+    });
+
+    // 3. Render Video Lists
+    function renderList(listKey, containerId) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = "";
+      const items = db[listKey] || [];
+
+      if (items.length === 0) {
+        container.innerHTML = `<div class="p-8 text-center text-xs text-gray-500 border border-dashed border-white/10 rounded-xl">No videos registered in this section yet.</div>`;
+        return;
+      }
+
+      items.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "flex items-center justify-between p-3 rounded-xl bg-black/40 border border-white/5 hover:border-white/20 transition group";
+        
+        const tagsHtml = (item.tags || []).map(t => `<span class="text-[10px] text-gray-400 bg-white/5 px-1.5 py-0.5 rounded font-mono">#${t}</span>`).join(" ");
+
+        // Clean poster path: convert .gif reference to .jpg for lightweight clean thumbnail
+        const thumbSrc = (item.poster || '').replace('.gif', '.jpg');
+        const isHorizontal = listKey === 'horizontalVideos';
+
+        row.innerHTML = `
+          <div class="flex items-center gap-3 overflow-hidden pr-3 flex-1">
+            <div class="${isHorizontal ? 'w-16 h-10 aspect-video' : 'w-10 h-14 aspect-[9/14]'} rounded-lg bg-[#111] overflow-hidden flex-shrink-0 border border-white/10 relative shadow-sm">
+              <img 
+                src="${thumbSrc}" 
+                alt="${item.title}" 
+                class="w-full h-full object-cover"
+                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+              >
+              <div class="w-full h-full absolute inset-0 bg-white/5 hidden items-center justify-center text-gray-500">
+                <i data-lucide="video" class="w-4 h-4"></i>
+              </div>
+            </div>
+            <div class="truncate flex-1">
+              <div class="flex items-center gap-2 truncate">
+                <h4 class="text-sm font-semibold text-white truncate">${item.title}</h4>
+                <span class="text-[10px] px-2 py-0.2 rounded-full bg-white/10 text-gray-300 font-medium">${item.category}</span>
+              </div>
+              <div class="flex items-center gap-1 mt-1 truncate">
+                ${tagsHtml || '<span class="text-[10px] text-gray-600">No tags</span>'}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-1 opacity-40 group-hover:opacity-100 transition flex-shrink-0">
+            <button onclick="moveItem('${listKey}', ${index}, -1)" title="Move Up" class="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white" ${index === 0 ? 'disabled' : ''}>
+              <i data-lucide="arrow-up" class="w-4 h-4"></i>
+            </button>
+            <button onclick="moveItem('${listKey}', ${index}, 1)" title="Move Down" class="p-1.5 hover:bg-white/10 rounded text-gray-400 hover:text-white" ${index === items.length - 1 ? 'disabled' : ''}>
+              <i data-lucide="arrow-down" class="w-4 h-4"></i>
+            </button>
+            <div class="w-px h-4 bg-white/10 mx-1"></div>
+            <button onclick="openModal('${listKey}', ${index})" title="Edit" class="p-1.5 hover:bg-blue-500/20 text-blue-400 rounded">
+              <i data-lucide="edit-3" class="w-4 h-4"></i>
+            </button>
+            <button onclick="deleteItem('${listKey}', ${index})" title="Delete" class="p-1.5 hover:bg-red-500/20 text-red-400 rounded">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+        container.appendChild(row);
+      });
+
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    function renderAll() {
+      populateProfileForm();
+      renderList('socialMediaVideos', 'vertical-list');
+      renderList('horizontalVideos', 'horizontal-list');
+      if (window.lucide) window.lucide.createIcons();
+    }
+
+    window.moveItem = function(listKey, index, delta) {
+      const list = db[listKey];
+      const target = index + delta;
+      if (target < 0 || target >= list.length) return;
+      const temp = list[index];
+      list[index] = list[target];
+      list[target] = temp;
+      renderAll();
+    };
+
+    window.deleteItem = function(listKey, index) {
+      if (confirm(`Remove "${db[listKey][index].title}"?`)) {
+        db[listKey].splice(index, 1);
+        renderAll();
+      }
+    };
+
+    // Modal Handling
+    const modal = document.getElementById("edit-modal");
+    const editForm = document.getElementById("edit-form");
+
+    window.openModal = function(listKey, index = -1) {
+      document.getElementById("field-list-type").value = listKey;
+      document.getElementById("field-index").value = index;
+      document.getElementById("modal-title").innerText = index >= 0 ? "Edit Video Info" : "Add New Video";
+
+      if (index >= 0) {
+        const item = db[listKey][index];
+        document.getElementById("field-id").value = item.id || "";
+        document.getElementById("field-title").value = item.title || "";
+        document.getElementById("field-category").value = item.category || "";
+        document.getElementById("field-src").value = item.masterSrc || item.previewSrc || "";
+        document.getElementById("field-poster").value = item.poster || "";
+        document.getElementById("field-tags").value = (item.tags || []).join(", ");
+      } else {
+        document.getElementById("field-id").value = "vid_" + Date.now();
+        document.getElementById("field-title").value = "";
+        document.getElementById("field-category").value = "";
+        document.getElementById("field-src").value = "assets/videos/";
+        document.getElementById("field-poster").value = "assets/thumbnails/";
+        document.getElementById("field-tags").value = "";
+      }
+
+      // Update modal live preview
+      updateModalThumbPreview(document.getElementById("field-poster").value);
+
+      modal.classList.remove("hidden");
+    };
+
+    function updateModalThumbPreview(path) {
+      const img = document.getElementById("modal-thumb-preview");
+      const placeholder = document.getElementById("modal-thumb-placeholder");
+      const cleanPath = (path || '').trim().replace('.gif', '.jpg');
+
+      if (cleanPath && cleanPath.length > 5) {
+        img.src = cleanPath;
+        img.classList.remove("hidden");
+        placeholder.classList.add("hidden");
+        img.onerror = () => {
+          img.classList.add("hidden");
+          placeholder.classList.remove("hidden");
+        };
+      } else {
+        img.classList.add("hidden");
+        placeholder.classList.remove("hidden");
+      }
+    }
+
+    document.getElementById("field-poster").addEventListener("input", (e) => {
+      updateModalThumbPreview(e.target.value);
+    });
+
+    window.closeModal = function() {
+      modal.classList.add("hidden");
+    };
+
+    editForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const listKey = document.getElementById("field-list-type").value;
+      const index = parseInt(document.getElementById("field-index").value);
+
+      const parsedTags = document.getElementById("field-tags").value
+        .split(",")
+        .map(t => t.replace(/^#/, "").trim())
+        .filter(Boolean);
+
+      const src = document.getElementById("field-src").value.trim();
+
+      const itemPayload = {
+        id: document.getElementById("field-id").value || ("vid_" + Date.now()),
+        title: document.getElementById("field-title").value.trim(),
+        category: document.getElementById("field-category").value.trim(),
+        previewSrc: src,
+        masterSrc: src,
+        poster: document.getElementById("field-poster").value.trim(),
+        tags: parsedTags,
+        comments: (index >= 0 && db[listKey][index].comments) ? db[listKey][index].comments : []
+      };
+
+      if (index >= 0) {
+        db[listKey][index] = itemPayload;
+      } else {
+        db[listKey].push(itemPayload);
+      }
+
+      closeModal();
+      renderAll();
+    });
+
+    // 4. Export projects-data.js
+    window.exportData = function() {
+      // Sync form fields just in case
+      db.profile.name = document.getElementById("prof-name").value.trim();
+      db.profile.contact.email = document.getElementById("prof-email").value.trim();
+      db.profile.contact.whatsapp = document.getElementById("prof-whatsapp").value.trim();
+      db.profile.contact.instagram = document.getElementById("prof-instagram").value.trim();
+      db.profile.tools = document.getElementById("prof-tools").value.split(",").map(s => s.trim()).filter(Boolean);
+      db.profile.bio = document.getElementById("prof-bio").value.trim();
+
+      const outputJs = `const PORTFOLIO_DATA = ${JSON.stringify(db, null, 2)};
+
+if (typeof window !== "undefined") {
+  window.PORTFOLIO_DATA = PORTFOLIO_DATA;
+}
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = PORTFOLIO_DATA;
+}
+`;
+
+      const blob = new Blob([outputJs], { type: "text/javascript" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "projects-data.js";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert("🎉 projects-data.js generated and downloaded!\\n\\nReplace the existing file in assets/js/projects-data.js, and your portfolio will update instantly!");
+    };
+
+    // Run initial render
+    renderAll();
+  </script>
+</body>
+</html>
