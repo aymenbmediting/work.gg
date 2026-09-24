@@ -472,22 +472,24 @@
     const canvas = document.getElementById('canvas');
     if (canvas) {
       try {
-        const isMobile = window.innerWidth < 768 || ('ontouchstart' in window);
-
         const tubesApp = TubesCursor(canvas, {
-          // Disable expensive bloom post-processing on mobile to keep phones cool & 60fps
-          bloom: isMobile ? false : { threshold: 0.1, strength: 1.2, radius: 0.4 },
+          // Radiant luminous bloom glow restored!
+          bloom: {
+            threshold: 0,
+            strength: 1.5,
+            radius: 0.5
+          },
           tubes: {
-            count: isMobile ? 8 : 14,
-            minTubularSegments: isMobile ? 16 : 32,
-            maxTubularSegments: isMobile ? 32 : 64,
-            colors: ["#a855f7", "#38bdf8", "#ec4899"],
-            lerp: isMobile ? 0.9 : 0.85,
-            noise: isMobile ? 0.04 : 0.065,
-            minRadius: 0.008,
-            maxRadius: isMobile ? 0.045 : 0.06,
+            count: 10,                 // Leaner polygon count so GPU runs bloom effortlessly
+            minTubularSegments: 24,
+            maxTubularSegments: 48,
+            colors: ["#f967fb", "#38bdf8", "#a855f7"],
+            lerp: 0.85,
+            noise: 0.06,
+            minRadius: 0.009,
+            maxRadius: 0.065,
             lights: {
-              intensity: isMobile ? 180 : 220,
+              intensity: 260,          // Radiant neon lights
               colors: ["#8b5cf6", "#06b6d4", "#f43f5e", "#3b82f6"]
             }
           }
