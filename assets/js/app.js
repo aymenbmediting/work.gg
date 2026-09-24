@@ -13,20 +13,19 @@ document.addEventListener("DOMContentLoaded", () => {
     let iterations = 0;
     clearInterval(element.dataset.hackerInterval);
     element.dataset.hackerInterval = setInterval(() => {
-      const currentText = element.dataset.currentText || text;
       element.innerText = text.split("")
         .map((letter, index) => {
           if (letter === " ") return " ";
-          if (index < Math.floor(iterations)) return currentText[index];
+          if (index < iterations) return text[index];
           return letters[Math.floor(Math.random() * letters.length)];
         })
         .join("");
       
-      iterations += 1 / 3;
       if (iterations >= text.length) {
         clearInterval(element.dataset.hackerInterval);
-        iterations = 0;
+        element.innerText = text;
       }
+      iterations += 1 / 3;
     }, 30);
   }
 
