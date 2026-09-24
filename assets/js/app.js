@@ -300,8 +300,10 @@ document.addEventListener("DOMContentLoaded", () => {
   function openModal(item, isHorizontal = false) {
     if (!modal || !modalContainer) return;
     
-    // Stop all background GIFs to save CPU
+    // Stop background animations and hide WebGL canvas to free 100% GPU for video
     isModalOpen = true;
+    const canvasBg = document.getElementById("canvas");
+    if (canvasBg) canvasBg.style.display = 'none';
 
     
     currentItemData = item;
@@ -338,12 +340,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Adjust modal layout based on orientation
-    const modalContentGrid = document.querySelector("#video-modal > div");
-    if (isHorizontal) {
-      modalContentGrid.className = "relative w-full h-auto max-h-screen sm:max-w-[1000px] flex flex-col bg-black sm:rounded-2xl sm:border sm:border-white/10 overflow-hidden shadow-2xl transition-all duration-300";
-    } else {
-      // Real social media style on mobile: full viewport, no radius!
-      modalContentGrid.className = "relative w-full h-[100dvh] sm:h-[90vh] sm:max-w-[420px] flex flex-col bg-black sm:rounded-[2rem] sm:border sm:border-white/10 overflow-hidden shadow-2xl transition-all duration-300";
+    const modalCard = document.getElementById("modal-card") || document.querySelector("#video-modal > div");
+    if (modalCard) {
+      if (isHorizontal) {
+        modalCard.className = "relative w-full h-auto max-h-screen sm:max-w-[1000px] flex flex-col bg-black sm:rounded-2xl sm:border sm:border-white/10 overflow-hidden shadow-2xl transition-all duration-300";
+      } else {
+        // True Native TikTok / Reels: edge-to-edge on mobile, 9:16 aspect on desktop
+        modalCard.className = "relative w-full h-[100dvh] sm:h-[86vh] sm:aspect-[9/16] sm:w-auto rounded-none sm:rounded-[2rem] bg-black overflow-hidden shadow-2xl flex flex-col sm:border sm:border-white/20 transition-all duration-300";
+      }
     }
     
     // Inject Custom Video Player seamlessly to prevent lag!
@@ -357,43 +361,90 @@ document.addEventListener("DOMContentLoaded", () => {
       currentModalVideo.playsInline = true;
       currentModalVideo.setAttribute('webkit-playsinline', '');
       currentModalVideo.disablePictureInPicture = true;
-      currentModalVideo.preload = "metadata";
+      currentModalVideo.preload = "auto";
       modalContainer.appendChild(currentModalVideo);
     }
     currentModalVideo.className = `w-full h-full ${objectFitClass} transition-opacity duration-300`;
 
     currentModalVideo.src = item.masterSrc;
 
+    // Handle sound toggle state
+    const modalMuteBtn = document.getElementById("modal-mute-btn");
+    const modalMuteIcon = document.getElementById("modal-mute-icon");
+    if (modalMuteBtn && modalMuteIcon) {
+      modalMuteBtn.onclick = (e) => {
+        e.stopPropagation();
+        if (!currentModalVideo) return;
+        currentModalVideo.muted = !currentModalVideo.muted;
+        modalMuteIcon.setAttribute("data-lucide", currentModalVideo.muted ? "volume-x" : "volume-2");
+        if (window.lucide) window.lucide.createIcons();
+      };
+    }
+
     // Auto-play handling for strict mobile browsers
     currentModalVideo.play().then(() => {
       modalPlayIndicator.classList.add("opacity-0");
     }).catch(() => {
-      modalPlayIndicator.classList.remove("opacity-0");
-      modalPlayIcon.setAttribute("data-lucide", "play");
+      // If autoplay with sound was blocked, fallback to muted autoplay
+      currentModalVideo.muted = true;
+      if (modalMuteIcon) modalMuteIcon.setAttribute("data-lucide", "volume-x");
+      currentModalVideo.play().then(() => {
+        modalPlayIndicator.classList.add("opacity-0");
+      }).catch(() => {
+        modalPlayIndicator.classList.remove("opacity-0");
+        modalPlayIcon.setAttribute("data-lucide", "play");
+      });
       if (window.lucide) window.lucide.createIcons();
     });
 
-    // Play/Pause interaction
-    modalContainer.onclick = () => {
-      if (!currentModalVideo) return;
+    // Double-tap to Like & Tap to Play/Pause
+    const heartPop = document.getElementById("modal-heart-pop");
+    let lastTap = 0;
 
-      if (currentModalVideo.paused) {
-        currentModalVideo.play();
-        modalPlayIndicator.classList.add("opacity-0");
-      } else {
-        currentModalVideo.pause();
-        modalPlayIcon.setAttribute("data-lucide", "play");
-        if (window.lucide) window.lucide.createIcons();
-        modalPlayIndicator.classList.remove("opacity-0");
+    function triggerHeartPop() {
+      if (!heartPop) return;
+      heartPop.classList.remove("opacity-0", "animate-heart-pop");
+      void heartPop.offsetWidth;
+      heartPop.classList.add("animate-heart-pop");
+      if (modalLikeBtn && currentItemData) {
+        const storageKey = getStorageKey('liked', currentItemData);
+        if (!localStorage.getItem(storageKey)) {
+          modalLikeBtn.click();
+        }
       }
+    }
+
+    modalContainer.onclick = (e) => {
+      if (e.target.closest('#comments-drawer') || e.target.closest('button') || e.target.closest('a')) return;
+      const now = Date.now();
+      if (now - lastTap < 300) {
+        triggerHeartPop();
+        lastTap = 0;
+        return;
+      }
+      lastTap = now;
+      setTimeout(() => {
+        if (Date.now() - lastTap >= 280 && lastTap !== 0) {
+          if (!currentModalVideo) return;
+          if (currentModalVideo.paused) {
+            currentModalVideo.play();
+            modalPlayIndicator.classList.add("opacity-0");
+          } else {
+            currentModalVideo.pause();
+            modalPlayIcon.setAttribute("data-lucide", "play");
+            if (window.lucide) window.lucide.createIcons();
+            modalPlayIndicator.classList.remove("opacity-0");
+          }
+        }
+      }, 290);
     };
 
-    // Update Progress Bar
-    currentModalVideo.addEventListener("timeupdate", () => {
+    // Update Progress Bar (assigned via property to prevent duplicate listener accumulation)
+    currentModalVideo.ontimeupdate = () => {
       if (!currentModalVideo.duration || !modalProgressBar) return;
       const progress = (currentModalVideo.currentTime / currentModalVideo.duration) * 100;
       modalProgressBar.style.width = `${progress}%`;
-    });
+    };
 
     // Seek interaction (Pointer events for mobile & desktop)
     if (modalProgressContainer) {
@@ -509,9 +560,10 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overscrollBehavior = 'auto';
     document.body.style.overflow = 'auto';
     
-    // Resume background GIFs
+    // Resume background animations
     isModalOpen = false;
-
+    const canvasBg = document.getElementById("canvas");
+    if (canvasBg) canvasBg.style.display = 'block';
   }
 
   if (modalClose) modalClose.addEventListener("click", closeModal);
@@ -527,47 +579,68 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.key === "Escape") closeModal();
   });
 
-  // 5. Global Swipe Logic for Modal (Added once!)
+  // 5. Full-Screen Native TikTok/Reels Gesture Engine
+  let touchStartX = 0;
   let touchStartY = 0;
-  let touchEndY = 0;
   
   if (modalContainer) {
-    modalContainer.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-    }, { passive: false });
-    
     modalContainer.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
     }, { passive: true });
 
-      modalContainer.addEventListener('touchend', (e) => {
-      touchEndY = e.changedTouches[0].screenY;
-      const swipeDistance = touchStartY - touchEndY;
+    modalContainer.addEventListener('touchend', (e) => {
+      const touchEndX = e.changedTouches[0].screenX;
+      const touchEndY = e.changedTouches[0].screenY;
       
-      let isAnimating = modalContainer.classList.contains('swipe-up-out') || modalContainer.classList.contains('swipe-down-out');
+      const deltaX = touchEndX - touchStartX;
+      const deltaY = touchStartY - touchEndY;
+
+      const modalCard = document.getElementById("modal-card") || modalContainer;
+      const isAnimating = modalCard.classList.contains('swipe-up-out') || 
+                          modalCard.classList.contains('swipe-down-out') || 
+                          modalCard.classList.contains('swipe-right-out');
       if (isAnimating) return;
 
-      if (swipeDistance > 50) {
+      // 1. Gesture Dismiss: Swipe Right (iOS/Reels standard)
+      if (deltaX > 80 && Math.abs(deltaY) < 70) {
+        modalCard.classList.add('swipe-right-out');
+        setTimeout(() => {
+          closeModal();
+          modalCard.classList.remove('swipe-right-out');
+        }, 260);
+        return;
+      }
+
+      // 2. Vertical Swiping (Up / Down)
+      if (deltaY > 55) {
         // Swiped UP -> Next Video
-        if (currentVideoIndex < videos.length - 1) {
-          modalContainer.classList.add('swipe-up-out');
+        if (currentVideoIndex >= 0 && currentVideoIndex < videos.length - 1) {
+          modalCard.classList.add('swipe-up-out');
           setTimeout(() => {
             openModal(videos[currentVideoIndex + 1]);
-            modalContainer.classList.remove('swipe-up-out');
-            modalContainer.classList.add('swipe-up-in');
-            setTimeout(() => modalContainer.classList.remove('swipe-up-in'), 300);
-          }, 300);
+            modalCard.classList.remove('swipe-up-out');
+            modalCard.classList.add('swipe-up-in');
+            setTimeout(() => modalCard.classList.remove('swipe-up-in'), 300);
+          }, 280);
         }
-      } else if (swipeDistance < -50) {
-        // Swiped DOWN -> Prev Video
+      } else if (deltaY < -55) {
+        // Swiped DOWN -> Prev Video (or Pull-Down Dismiss if on first video)
         if (currentVideoIndex > 0) {
-          modalContainer.classList.add('swipe-down-out');
+          modalCard.classList.add('swipe-down-out');
           setTimeout(() => {
             openModal(videos[currentVideoIndex - 1]);
-            modalContainer.classList.remove('swipe-down-out');
-            modalContainer.classList.add('swipe-down-in');
-            setTimeout(() => modalContainer.classList.remove('swipe-down-in'), 300);
-          }, 300);
+            modalCard.classList.remove('swipe-down-out');
+            modalCard.classList.add('swipe-down-in');
+            setTimeout(() => modalCard.classList.remove('swipe-down-in'), 300);
+          }, 280);
+        } else if (currentVideoIndex === 0) {
+          // Pull down to dismiss
+          modalCard.classList.add('swipe-down-out');
+          setTimeout(() => {
+            closeModal();
+            modalCard.classList.remove('swipe-down-out');
+          }, 260);
         }
       }
     }, { passive: true });
@@ -578,16 +651,17 @@ document.addEventListener("DOMContentLoaded", () => {
     window.lucide.createIcons();
   }
 
-  // 6. Smooth Background Parallax on mouse move
+  // 6. Smooth Background Parallax on mouse move (Desktop only)
   const bgImg = document.getElementById("dynamic-bg-img");
-  if (bgImg) {
+  const hasMousePointer = window.matchMedia('(pointer: fine)').matches;
+  if (bgImg && hasMousePointer) {
     let mouseX = 0, mouseY = 0;
     let currentX = 0, currentY = 0;
 
     window.addEventListener("mousemove", (e) => {
-      mouseX = (window.innerWidth / 2 - e.clientX) / 50;
-      mouseY = (window.innerHeight / 2 - e.clientY) / 50;
-    });
+      mouseX = (window.innerWidth / 2 - e.clientX) / 60;
+      mouseY = (window.innerHeight / 2 - e.clientY) / 60;
+    }, { passive: true });
 
     function animateParallax() {
       currentX += (mouseX - currentX) * 0.05;

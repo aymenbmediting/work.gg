@@ -88,20 +88,34 @@
       100% { transform: translateY(0) scale(1); opacity: 1; }
     }
     
-    .swipe-up-out { animation: swipeUpOut 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-    .swipe-up-in { animation: swipeUpIn 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-    .swipe-down-out { animation: swipeDownOut 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-    .swipe-down-in { animation: swipeDownIn 0.3s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
-
-    /* Living Ken Burns Cinematic Drift */
-    @keyframes kenBurns {
-      0% { transform: scale(1.03) translate(0px, 0px); }
-      50% { transform: scale(1.10) translate(-15px, 10px); }
-      100% { transform: scale(1.05) translate(10px, -12px); }
+    @keyframes swipeRightOut {
+      0% { transform: translateX(0) scale(1); opacity: 1; }
+      100% { transform: translateX(100%) scale(0.92); opacity: 0; }
     }
-    .animate-ken-burns {
-      animation: kenBurns 24s ease-in-out infinite alternate;
-      will-change: transform;
+    .swipe-right-out { animation: swipeRightOut 0.28s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+
+    @keyframes heartPopAnim {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.3); opacity: 1; }
+      100% { transform: scale(1); opacity: 0; }
+    }
+    .animate-heart-pop { animation: heartPopAnim 0.75s ease-out forwards; }
+
+    /* 21st.dev Animated Cyber Angle Grid */
+    @keyframes cyberGridDrift {
+      0% { background-position: 0 0; }
+      100% { background-position: 96px 96px; }
+    }
+    .bg-21st-cyber {
+      background-color: #050505;
+      background-image: 
+        linear-gradient(135deg, rgba(168, 85, 247, 0.08) 1px, transparent 1px),
+        linear-gradient(45deg, rgba(56, 189, 248, 0.08) 1px, transparent 1px);
+      background-size: 48px 48px;
+      animation: cyberGridDrift 22s linear infinite;
+      will-change: background-position;
+      mask-image: radial-gradient(ellipse 85% 65% at 50% 25%, black 20%, transparent 100%);
+      -webkit-mask-image: radial-gradient(ellipse 85% 65% at 50% 25%, black 20%, transparent 100%);
     }
 
     @keyframes waveBounce {
@@ -113,19 +127,6 @@
       display: inline-block;
       animation: waveBounce 1.2s ease-in-out 1 forwards;
     }
-
-    @keyframes blob {
-      0% { transform: translate(0px, 0px) scale(1); }
-      33% { transform: translate(30px, -50px) scale(1.1); }
-      66% { transform: translate(-20px, 20px) scale(0.9); }
-      100% { transform: translate(0px, 0px) scale(1); }
-    }
-    .animate-blob {
-      animation: blob 10s infinite alternate;
-      will-change: transform;
-    }
-    .animation-delay-2000 { animation-delay: 2s; }
-    .animation-delay-4000 { animation-delay: 4s; }
 
     @keyframes shimmer {
       0% { transform: translateX(-150%) skewX(-20deg); }
@@ -169,23 +170,23 @@
 
 <body class="antialiased min-h-screen flex flex-col relative text-gray-200 bg-[#050505]">
 
-  <!-- 1. Dynamic Living Background Image (Static & Lightweight) -->
-  <div class="fixed inset-0 z-[-4] overflow-hidden pointer-events-none bg-black">
-    <div id="dynamic-bg-img" 
-         class="absolute inset-0 bg-cover bg-center opacity-40" 
-         style="background-image: url('assets/bg.webp');">
-    </div>
+  <!-- 1. Neon 3D Tubes Cursor Trail WebGL Canvas -->
+  <canvas id="canvas" class="fixed inset-0 w-full h-full pointer-events-none z-[-3]"></canvas>
+
+  <!-- 2. 21st.dev Animated Cyber Angle Dynamic Grid (Subtle Base) -->
+  <div class="fixed inset-0 z-[-4] overflow-hidden pointer-events-none bg-[#050505]">
+    <div id="dynamic-bg-img" class="absolute inset-0 bg-21st-cyber opacity-70"></div>
   </div>
 
-  <!-- 2. Ambient Light Rays (Static gradient blobs, no expensive blurs/animations) -->
-  <div class="fixed inset-0 z-[-3] overflow-hidden pointer-events-none opacity-30 mix-blend-screen">
-    <div class="absolute top-[-15%] left-[-10%] w-[55vw] h-[55vw] bg-[radial-gradient(circle_at_center,theme(colors.purple.600/0.4)_0%,transparent_60%)]"></div>
-    <div class="absolute bottom-[-15%] right-[-10%] w-[60vw] h-[60vw] bg-[radial-gradient(circle_at_center,theme(colors.blue.600/0.4)_0%,transparent_60%)]"></div>
-    <div class="absolute top-[35%] left-[25%] w-[35vw] h-[35vw] bg-[radial-gradient(circle_at_center,theme(colors.emerald.500/0.25)_0%,transparent_60%)]"></div>
+  <!-- 2. Ambient Light Rays (Electric Purple, Cyan & Emerald) -->
+  <div class="fixed inset-0 z-[-3] overflow-hidden pointer-events-none opacity-45 mix-blend-screen">
+    <div class="absolute top-[-12%] left-[25%] w-[60vw] h-[60vw] bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.25)_0%,transparent_65%)]"></div>
+    <div class="absolute top-[35%] right-[-10%] w-[55vw] h-[55vw] bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.20)_0%,transparent_65%)]"></div>
+    <div class="absolute bottom-[-10%] left-[10%] w-[50vw] h-[50vw] bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12)_0%,transparent_65%)]"></div>
   </div>
 
   <!-- 3. Dark Vignette Overlay (Guarantees clean dark UI and razor-sharp readability) -->
-  <div class="fixed inset-0 z-[-2] bg-gradient-to-b from-[#050505]/75 via-[#050505]/82 to-[#050505]/95 pointer-events-none"></div>
+  <div class="fixed inset-0 z-[-2] bg-gradient-to-b from-transparent via-[#050505]/40 to-[#050505] pointer-events-none"></div>
 
   <!-- Header (Glass) -->
   <header class="sticky top-0 z-50 glass-panel border-b-0 border-white/10 shadow-lg">
@@ -208,9 +209,15 @@
     <!-- Hero / About Section -->
     <section class="max-w-5xl mx-auto px-6 fade-up relative space-y-6">
       
-      <!-- Status badge -->
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-panel text-xs text-emerald-400 font-medium">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+      <!-- Status badge with Profile Pic on the left -->
+      <div class="inline-flex items-center gap-3 pl-1.5 pr-4 py-1.5 rounded-full glass-panel text-xs text-emerald-400 font-medium border border-white/10 hover:border-emerald-500/40 transition shadow-sm">
+        <!-- Profile Picture Avatar -->
+        <div class="relative w-8 h-8 rounded-full overflow-hidden border border-emerald-400/50 shadow-md flex-shrink-0 group">
+          <div class="absolute inset-0 bg-cover bg-center scale-135 group-hover:scale-150 transition-transform duration-500" style="background-image: url('assets/bg.webp');"></div>
+          <div class="absolute inset-0 bg-gradient-to-tr from-emerald-950/20 to-transparent"></div>
+          <!-- Online active dot -->
+          <span class="absolute bottom-0 right-0 w-2 h-2 rounded-full bg-emerald-400 border border-black animate-pulse"></span>
+        </div>
         <span>Available for New Projects & Edits</span>
       </div>
 
@@ -357,23 +364,31 @@
     </div>
   </footer>
 
-  <!-- Reverted & Upgraded Video Modal -->
-  <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/90 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 p-4">
-    <div class="relative w-full max-w-md max-h-[90vh] glass-panel rounded-3xl overflow-hidden shadow-2xl flex flex-col border border-white/20 group">
+  <!-- Full-Screen Native TikTok/Reels Video Modal -->
+  <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 p-0 sm:p-4">
+    <div id="modal-card" class="relative w-full h-[100dvh] sm:h-[86vh] sm:aspect-[9/16] sm:w-auto rounded-none sm:rounded-[2rem] bg-black overflow-hidden shadow-2xl flex flex-col sm:border sm:border-white/20 group">
       
       <!-- Video Container -->
-      <div class="w-full h-full bg-black relative flex items-center justify-center overflow-hidden" id="modal-video-container">
+      <div class="w-full h-full bg-black relative flex items-center justify-center overflow-hidden touch-none" id="modal-video-container">
         <!-- Injected dynamically via JS -->
       </div>
 
-      <!-- Top Gradient (for close button visibility) -->
-      <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/60 to-transparent z-30 pointer-events-none"></div>
+      <!-- Top Gradient (for controls visibility) -->
+      <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/70 to-transparent z-30 pointer-events-none"></div>
 
-      <!-- Top Action Bar (Shifted down to clear Instagram/In-App browser headers) -->
-      <div class="absolute top-14 sm:top-6 right-4 sm:right-6 z-40 pointer-events-none">
-        <button id="modal-close" class="p-2 sm:p-3 rounded-full bg-black/40 hover:bg-white/20 backdrop-blur-md text-white transition pointer-events-auto border border-white/10 shadow-lg">
-          <i data-lucide="x" class="w-5 h-5 sm:w-6 sm:h-6"></i>
+      <!-- Top Action Bar (Clean Controls) -->
+      <div class="absolute top-12 sm:top-5 right-4 sm:right-5 z-40 flex items-center gap-2 pointer-events-auto">
+        <button id="modal-mute-btn" aria-label="Toggle Sound" class="p-2.5 sm:p-3 rounded-full bg-black/50 hover:bg-white/20 backdrop-blur-md text-white transition border border-white/10 shadow-lg">
+          <i data-lucide="volume-2" id="modal-mute-icon" class="w-5 h-5"></i>
         </button>
+        <button id="modal-close" aria-label="Close Video" class="p-2.5 sm:p-3 rounded-full bg-black/50 hover:bg-white/20 backdrop-blur-md text-white transition border border-white/10 shadow-lg">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Double Tap Heart Pop Indicator -->
+      <div id="modal-heart-pop" class="absolute inset-0 flex items-center justify-center z-30 pointer-events-none opacity-0">
+        <i data-lucide="heart" class="w-24 h-24 text-rose-500 fill-rose-500 drop-shadow-[0_0_25px_rgba(244,63,94,0.9)]"></i>
       </div>
 
       <!-- Horizontal Top Info Bar (Hidden by default, shifted down) -->
@@ -449,5 +464,82 @@
   <!-- Scripts -->
   <script src="assets/js/projects-data.js?v=41"></script>
   <script src="assets/js/app.js?v=41"></script>
+
+  <!-- 3D Neon Tubes Cursor Trail Engine -->
+  <script type="module">
+    import TubesCursor from "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js";
+    
+    const canvas = document.getElementById('canvas');
+    if (canvas) {
+      try {
+        const isMobile = window.innerWidth < 768 || ('ontouchstart' in window);
+
+        const tubesApp = TubesCursor(canvas, {
+          // Disable expensive bloom post-processing on mobile to keep phones cool & 60fps
+          bloom: isMobile ? false : { threshold: 0.1, strength: 1.2, radius: 0.4 },
+          tubes: {
+            count: isMobile ? 8 : 14,
+            minTubularSegments: isMobile ? 16 : 32,
+            maxTubularSegments: isMobile ? 32 : 64,
+            colors: ["#a855f7", "#38bdf8", "#ec4899"],
+            lerp: isMobile ? 0.9 : 0.85,
+            noise: isMobile ? 0.04 : 0.065,
+            minRadius: 0.008,
+            maxRadius: isMobile ? 0.045 : 0.06,
+            lights: {
+              intensity: isMobile ? 180 : 220,
+              colors: ["#8b5cf6", "#06b6d4", "#f43f5e", "#3b82f6"]
+            }
+          }
+        });
+        window.tubesApp = tubesApp;
+
+        // Hyper-sensitive Touch & Pointer Tracking
+        const forwardTouch = (e) => {
+          if (e.touches && e.touches.length > 0) {
+            const touch = e.touches[0];
+            document.body.dispatchEvent(new PointerEvent('pointermove', {
+              clientX: touch.clientX,
+              clientY: touch.clientY,
+              bubbles: true
+            }));
+          }
+        };
+
+        // Light touch immediately ignites glow & snaps tubes to finger position
+        window.addEventListener('touchstart', (e) => {
+          forwardTouch(e);
+          if (tubesApp && tubesApp.tubes && typeof tubesApp.tubes.setLightsIntensity === 'function') {
+            tubesApp.tubes.setLightsIntensity(320);
+          }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', forwardTouch, { passive: true });
+
+        window.addEventListener('touchend', () => {
+          if (tubesApp && tubesApp.tubes && typeof tubesApp.tubes.setLightsIntensity === 'function') {
+            tubesApp.tubes.setLightsIntensity(220);
+          }
+        }, { passive: true });
+
+        // Interactive color switch on background tap/click
+        document.body.addEventListener('click', (e) => {
+          if (e.target.closest('button, a, input, video, #video-modal, .carousel-card')) return;
+          const colors = randomColors(3);
+          const lightsColors = randomColors(4);
+          tubesApp.tubes.setColors(colors);
+          tubesApp.tubes.setLightsColors(lightsColors);
+        });
+
+        function randomColors(count) {
+          return new Array(count)
+            .fill(0)
+            .map(() => "#" + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0'));
+        }
+      } catch (err) {
+        console.warn("Neon 3D Tubes unavailable:", err);
+      }
+    }
+  </script>
 </body>
 </html>
