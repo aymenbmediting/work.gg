@@ -9,19 +9,24 @@ document.addEventListener("DOMContentLoaded", () => {
   // Hacker Text Effect
   const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
   function triggerHackerEffect(element, text) {
+    if (!element) return;
     let iterations = 0;
     clearInterval(element.dataset.hackerInterval);
     element.dataset.hackerInterval = setInterval(() => {
+      const currentText = element.dataset.currentText || text;
       element.innerText = text.split("")
         .map((letter, index) => {
           if (letter === " ") return " ";
-          if (index < iterations) return text[index];
+          if (index < Math.floor(iterations)) return currentText[index];
           return letters[Math.floor(Math.random() * letters.length)];
         })
         .join("");
       
-      if (iterations >= text.length) clearInterval(element.dataset.hackerInterval);
       iterations += 1 / 3;
+      if (iterations >= text.length) {
+        clearInterval(element.dataset.hackerInterval);
+        iterations = 0;
+      }
     }, 30);
   }
 
@@ -347,21 +352,16 @@ document.addEventListener("DOMContentLoaded", () => {
     
     currentModalVideo = modalContainer.querySelector("video");
     if (!currentModalVideo) {
-      modalContainer.innerHTML = `
-        <video 
-          autoplay 
-          loop
-          playsinline 
-          webkit-playsinline
-          disablePictureInPicture
-          preload="metadata"
-          class="w-full h-full ${objectFitClass} transition-opacity duration-300">
-        </video>
-      `;
-      currentModalVideo = modalContainer.querySelector("video");
-    } else {
-      currentModalVideo.className = `w-full h-full ${objectFitClass} transition-opacity duration-300`;
+      currentModalVideo = document.createElement("video");
+      currentModalVideo.autoplay = true;
+      currentModalVideo.loop = true;
+      currentModalVideo.playsInline = true;
+      currentModalVideo.setAttribute('webkit-playsinline', '');
+      currentModalVideo.disablePictureInPicture = true;
+      currentModalVideo.preload = "metadata";
+      modalContainer.appendChild(currentModalVideo);
     }
+    currentModalVideo.className = `w-full h-full ${objectFitClass} transition-opacity duration-300`;
 
     currentModalVideo.src = item.masterSrc;
 
@@ -419,7 +419,8 @@ document.addEventListener("DOMContentLoaded", () => {
     modalLikeBtn.classList.remove("border-red-500/50");
 
     // Check localStorage for Likes
-    if (localStorage.getItem(`liked_${item.title}`)) {
+    const storageKey = getStorageKey('liked', item);
+    if (localStorage.getItem(storageKey)) {
       modalLikeIcon.classList.add("fill-red-500", "text-red-500");
       modalLikeBtn.classList.add("border-red-500/50");
     }
@@ -457,17 +458,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (window.lucide) window.lucide.createIcons();
   }
 
+  function getStorageKey(prefix, item) {
+    const keyBase = item.title ? item.title.trim() : item.id;
+    return `${prefix}_${keyBase}`;
+  }
+
   // Like Button Click
   if (modalLikeBtn) {
     modalLikeBtn.addEventListener("click", () => {
       if (!currentItemData) return;
-      const isLiked = localStorage.getItem(`liked_${currentItemData.title}`);
+      const storageKey = getStorageKey('liked', currentItemData);
+      const isLiked = localStorage.getItem(storageKey);
       if (isLiked) {
-        localStorage.removeItem(`liked_${currentItemData.title}`);
+        localStorage.removeItem(storageKey);
         modalLikeIcon.classList.remove("fill-red-500", "text-red-500");
         modalLikeBtn.classList.remove("border-red-500/50");
       } else {
-        localStorage.setItem(`liked_${currentItemData.title}`, "true");
+        localStorage.setItem(storageKey, "true");
         modalLikeIcon.classList.add("fill-red-500", "text-red-500");
         modalLikeBtn.classList.add("border-red-500/50");
       }
