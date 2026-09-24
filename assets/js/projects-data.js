@@ -21,7 +21,7 @@ const PORTFOLIO_DATA = {
       "category": "Fashion Reel",
       "previewSrc": "assets/videos/outfit model.mp4",
       "masterSrc": "assets/videos/outfit model.mp4",
-      "poster": "assets/thumbnails/outfit model.webp",
+      "poster": "assets/thumbnails/outfit model.jpg",
       "tags": [
         "Fashion",
         "Model",
@@ -41,7 +41,7 @@ const PORTFOLIO_DATA = {
       "category": "Real Estate",
       "previewSrc": "assets/videos/Real state reel.mp4",
       "masterSrc": "assets/videos/Real state reel.mp4",
-      "poster": "assets/thumbnails/Real state reel.webp",
+      "poster": "assets/thumbnails/Real state reel.jpg",
       "tags": [
         "Real Estate",
         "Property",
@@ -61,7 +61,7 @@ const PORTFOLIO_DATA = {
       "category": "Instagram Reel",
       "previewSrc": "assets/videos/DLMhJkfsSYC.mp4",
       "masterSrc": "assets/videos/DLMhJkfsSYC.mp4",
-      "poster": "assets/thumbnails/DLMhJkfsSYC.webp",
+      "poster": "assets/thumbnails/DLMhJkfsSYC.jpg",
       "tags": [
         "Cinematic",
         "Color Grade",
@@ -81,7 +81,7 @@ const PORTFOLIO_DATA = {
       "category": "Reels / TikTok",
       "previewSrc": "assets/videos/DMa8jZTMriz.mp4",
       "masterSrc": "assets/videos/DMa8jZTMriz.mp4",
-      "poster": "assets/thumbnails/DMa8jZTMriz.webp",
+      "poster": "assets/thumbnails/DMa8jZTMriz.jpg",
       "tags": [
         "Event",
         "Music",
@@ -106,7 +106,7 @@ const PORTFOLIO_DATA = {
       "category": "Automotive",
       "previewSrc": "assets/videos/Car Edits and color grade.mp4",
       "masterSrc": "assets/videos/Car Edits and color grade.mp4",
-      "poster": "assets/thumbnails/Car Edits and color grade.webp",
+      "poster": "assets/thumbnails/Car Edits and color grade.jpg",
       "tags": [
         "Cars",
         "Color Grade",
@@ -126,7 +126,7 @@ const PORTFOLIO_DATA = {
       "category": "Commercial",
       "previewSrc": "assets/videos/Store ad spot.mp4",
       "masterSrc": "assets/videos/Store ad spot.mp4",
-      "poster": "assets/thumbnails/Store ad spot.webp",
+      "poster": "assets/thumbnails/Store ad spot.jpg",
       "tags": [
         "Commercial",
         "Ad",
@@ -146,7 +146,7 @@ const PORTFOLIO_DATA = {
       "category": "TikTok / Shorts",
       "previewSrc": "assets/videos/7672421251171781906.mp4",
       "masterSrc": "assets/videos/7672421251171781906.mp4",
-      "poster": "assets/thumbnails/7672421251171781906.webp",
+      "poster": "assets/thumbnails/7672421251171781906.jpg",
       "tags": [
         "Viral",
         "Fast Cuts",
@@ -171,7 +171,7 @@ const PORTFOLIO_DATA = {
       "category": "Social Media",
       "previewSrc": "assets/videos/7673500388569435400.mp4",
       "masterSrc": "assets/videos/7673500388569435400.mp4",
-      "poster": "assets/thumbnails/7673500388569435400.webp",
+      "poster": "assets/thumbnails/7673500388569435400.jpg",
       "tags": [
         "Creative",
         "VFX",
@@ -191,7 +191,7 @@ const PORTFOLIO_DATA = {
       "category": "Promo / Ad",
       "previewSrc": "assets/videos/Dcg4_vUNEyR.mp4",
       "masterSrc": "assets/videos/Dcg4_vUNEyR.mp4",
-      "poster": "assets/thumbnails/Dcg4_vUNEyR.webp",
+      "poster": "assets/thumbnails/Dcg4_vUNEyR.jpg",
       "tags": [
         "Promo",
         "Commercial",
@@ -211,7 +211,7 @@ const PORTFOLIO_DATA = {
       "category": "Colorist Showcase",
       "previewSrc": "assets/videos/color grade.mp4",
       "masterSrc": "assets/videos/color grade.mp4",
-      "poster": "assets/thumbnails/color grade.webp",
+      "poster": "assets/thumbnails/color grade.jpg",
       "tags": [
         "Colorist",
         "DaVinci",
@@ -231,7 +231,7 @@ const PORTFOLIO_DATA = {
       "category": "VFX / Edit",
       "previewSrc": "assets/videos/Oppenheimer Cc after effect edit.mp4",
       "masterSrc": "assets/videos/Oppenheimer Cc after effect edit.mp4",
-      "poster": "assets/thumbnails/Oppenheimer Cc after effect edit.webp",
+      "poster": "assets/thumbnails/Oppenheimer Cc after effect edit.jpg",
       "tags": [
         "After Effects",
         "VFX",
@@ -251,7 +251,7 @@ const PORTFOLIO_DATA = {
       "category": "Instagram Reel",
       "previewSrc": "assets/videos/7303884156881194271.mp4",
       "masterSrc": "assets/videos/7303884156881194271.mp4",
-      "poster": "assets/thumbnails/7303884156881194271.webp",
+      "poster": "assets/thumbnails/7303884156881194271.jpg",
       "tags": [
         "Trending",
         "Dynamic",
