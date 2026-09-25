@@ -21,6 +21,7 @@ const PORTFOLIO_DATA = {
       "category": "Fashion Reel",
       "previewSrc": "assets/videos/outfit model.mp4",
       "masterSrc": "assets/videos/outfit model.mp4",
+      "mobileSrc": "assets/videos/mobile/outfit model.mp4",
       "poster": "assets/thumbnails/outfit model.jpg",
       "tags": [
         "Fashion",
@@ -41,6 +42,7 @@ const PORTFOLIO_DATA = {
       "category": "Real Estate",
       "previewSrc": "assets/videos/Real state reel.mp4",
       "masterSrc": "assets/videos/Real state reel.mp4",
+      "mobileSrc": "assets/videos/mobile/Real state reel.mp4",
       "poster": "assets/thumbnails/Real state reel.jpg",
       "tags": [
         "Real Estate",
@@ -61,6 +63,7 @@ const PORTFOLIO_DATA = {
       "category": "Instagram Reel",
       "previewSrc": "assets/videos/DLMhJkfsSYC.mp4",
       "masterSrc": "assets/videos/DLMhJkfsSYC.mp4",
+      "mobileSrc": "assets/videos/mobile/DLMhJkfsSYC.mp4",
       "poster": "assets/thumbnails/DLMhJkfsSYC.jpg",
       "tags": [
         "Cinematic",
@@ -81,6 +84,7 @@ const PORTFOLIO_DATA = {
       "category": "Reels / TikTok",
       "previewSrc": "assets/videos/DMa8jZTMriz.mp4",
       "masterSrc": "assets/videos/DMa8jZTMriz.mp4",
+      "mobileSrc": "assets/videos/mobile/DMa8jZTMriz.mp4",
       "poster": "assets/thumbnails/DMa8jZTMriz.jpg",
       "tags": [
         "Event",
@@ -106,6 +110,7 @@ const PORTFOLIO_DATA = {
       "category": "Automotive",
       "previewSrc": "assets/videos/Car Edits and color grade.mp4",
       "masterSrc": "assets/videos/Car Edits and color grade.mp4",
+      "mobileSrc": "assets/videos/mobile/Car Edits and color grade.mp4",
       "poster": "assets/thumbnails/Car Edits and color grade.jpg",
       "tags": [
         "Cars",
@@ -126,6 +131,7 @@ const PORTFOLIO_DATA = {
       "category": "Commercial",
       "previewSrc": "assets/videos/Store ad spot.mp4",
       "masterSrc": "assets/videos/Store ad spot.mp4",
+      "mobileSrc": "assets/videos/mobile/Store ad spot.mp4",
       "poster": "assets/thumbnails/Store ad spot.jpg",
       "tags": [
         "Commercial",
@@ -146,6 +152,7 @@ const PORTFOLIO_DATA = {
       "category": "TikTok / Shorts",
       "previewSrc": "assets/videos/7672421251171781906.mp4",
       "masterSrc": "assets/videos/7672421251171781906.mp4",
+      "mobileSrc": "assets/videos/mobile/7672421251171781906.mp4",
       "poster": "assets/thumbnails/7672421251171781906.jpg",
       "tags": [
         "Viral",
@@ -171,6 +178,7 @@ const PORTFOLIO_DATA = {
       "category": "Social Media",
       "previewSrc": "assets/videos/7673500388569435400.mp4",
       "masterSrc": "assets/videos/7673500388569435400.mp4",
+      "mobileSrc": "assets/videos/mobile/7673500388569435400.mp4",
       "poster": "assets/thumbnails/7673500388569435400.jpg",
       "tags": [
         "Creative",
@@ -191,6 +199,7 @@ const PORTFOLIO_DATA = {
       "category": "Promo / Ad",
       "previewSrc": "assets/videos/Dcg4_vUNEyR.mp4",
       "masterSrc": "assets/videos/Dcg4_vUNEyR.mp4",
+      "mobileSrc": "assets/videos/mobile/Dcg4_vUNEyR.mp4",
       "poster": "assets/thumbnails/Dcg4_vUNEyR.jpg",
       "tags": [
         "Promo",
@@ -211,6 +220,7 @@ const PORTFOLIO_DATA = {
       "category": "Colorist Showcase",
       "previewSrc": "assets/videos/color grade.mp4",
       "masterSrc": "assets/videos/color grade.mp4",
+      "mobileSrc": "assets/videos/mobile/color grade.mp4",
       "poster": "assets/thumbnails/color grade.jpg",
       "tags": [
         "Colorist",
@@ -231,6 +241,7 @@ const PORTFOLIO_DATA = {
       "category": "VFX / Edit",
       "previewSrc": "assets/videos/Oppenheimer Cc after effect edit.mp4",
       "masterSrc": "assets/videos/Oppenheimer Cc after effect edit.mp4",
+      "mobileSrc": "assets/videos/mobile/Oppenheimer Cc after effect edit.mp4",
       "poster": "assets/thumbnails/Oppenheimer Cc after effect edit.jpg",
       "tags": [
         "After Effects",
@@ -251,6 +262,7 @@ const PORTFOLIO_DATA = {
       "category": "Instagram Reel",
       "previewSrc": "assets/videos/7303884156881194271.mp4",
       "masterSrc": "assets/videos/7303884156881194271.mp4",
+      "mobileSrc": "assets/videos/mobile/7303884156881194271.mp4",
       "poster": "assets/thumbnails/7303884156881194271.jpg",
       "tags": [
         "Trending",
@@ -278,6 +290,7 @@ const PORTFOLIO_DATA = {
       "category": "Horizontal Edit",
       "previewSrc": "assets/videos/Night Prod REEL 1001.mp4",
       "masterSrc": "assets/videos/Night Prod REEL 1001.mp4",
+      "mobileSrc": "assets/videos/mobile/Night Prod REEL 1001.mp4",
       "poster": "assets/thumbnails/Night Prod REEL 1001.jpg?v=2",
       "tags": [
         "Cinematic",
@@ -298,6 +311,7 @@ const PORTFOLIO_DATA = {
       "category": "Horizontal Edit",
       "previewSrc": "assets/videos/Reel Anamorphic.mp4",
       "masterSrc": "assets/videos/Reel Anamorphic.mp4",
+      "mobileSrc": "assets/videos/mobile/Reel Anamorphic.mp4",
       "poster": "assets/thumbnails/Reel Anamorphic.jpg?v=2",
       "tags": [
         "Anamorphic",

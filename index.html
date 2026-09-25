@@ -2,7 +2,7 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
   <link rel="icon" type="image/png" href="assets/favicon.png" />
 	<link rel="apple-touch-icon" href="assets/favicon.png" />
   <!-- Primary Meta Tags -->
@@ -157,6 +157,23 @@
       -webkit-transform: translateZ(0); /* Fix Safari render glitch */
     }
 
+    /* Richardsancho Organic Color Aura Keyframes (Mobile) */
+    @keyframes auraPulse1 {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.65; }
+      50% { transform: translate3d(30px, -40px, 0) scale(1.18); opacity: 0.9; }
+    }
+    @keyframes auraPulse2 {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.6; }
+      50% { transform: translate3d(-35px, 30px, 0) scale(1.22); opacity: 0.85; }
+    }
+    @keyframes auraPulse3 {
+      0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.55; }
+      50% { transform: translate3d(25px, 35px, 0) scale(1.14); opacity: 0.8; }
+    }
+    .animate-aura-1 { animation: auraPulse1 12s ease-in-out infinite alternate; will-change: transform, opacity; }
+    .animate-aura-2 { animation: auraPulse2 15s ease-in-out infinite alternate; will-change: transform, opacity; }
+    .animate-aura-3 { animation: auraPulse3 18s ease-in-out infinite alternate; will-change: transform, opacity; }
+
     /* Hide scrollbars for native carousel */
     .no-scrollbar::-webkit-scrollbar {
       display: none;
@@ -170,33 +187,47 @@
 
 <body class="antialiased min-h-screen flex flex-col relative text-gray-200 bg-[#050505]">
 
-  <!-- 1. Neon 3D Tubes Cursor Trail WebGL Canvas -->
-  <canvas id="canvas" class="fixed inset-0 w-full h-full pointer-events-none z-[-3]"></canvas>
+  <!-- 1. Desktop Neon 3D Tubes WebGL Canvas (Desktop Only) -->
+  <canvas id="canvas" class="fixed inset-0 w-full h-full pointer-events-none z-[-3] hidden md:block"></canvas>
 
-  <!-- 2. 21st.dev Animated Cyber Angle Dynamic Grid (Subtle Base) -->
+  <!-- 2. Mobile Richardsancho-inspired Organic Color Aura & Film Grain Noise (Mobile Only, Zero WebGL) -->
+  <div id="mobile-aura-bg" class="fixed inset-0 z-[-3] overflow-hidden pointer-events-none md:hidden bg-[#070709]">
+    <!-- Vibrant Organic Glowing Color Blobs (Rich luminosity, not too dark) -->
+    <div class="absolute -top-[12%] -left-[10%] w-[90vw] h-[90vw] rounded-full bg-gradient-to-br from-purple-500/50 via-fuchsia-600/40 to-transparent blur-[65px] animate-aura-1"></div>
+    <div class="absolute top-[28%] -right-[15%] w-[95vw] h-[95vw] rounded-full bg-gradient-to-bl from-cyan-400/45 via-blue-500/40 to-transparent blur-[70px] animate-aura-2"></div>
+    <div class="absolute bottom-[2%] -left-[10%] w-[85vw] h-[85vw] rounded-full bg-gradient-to-tr from-emerald-400/40 via-teal-500/35 to-transparent blur-[60px] animate-aura-3"></div>
+    <!-- Warm radiant glow center spark -->
+    <div class="absolute top-[42%] left-[15%] w-[65vw] h-[65vw] rounded-full bg-rose-500/30 blur-[80px] animate-pulse"></div>
+
+    <!-- Authentic Film Grain Noise Layer (Pure SVG data URI, 0 HTTP requests) -->
+    <div class="absolute inset-0 opacity-[0.24] mix-blend-overlay pointer-events-none" style="background-image: url('data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noise%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.85%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noise)%22/%3E%3C/svg%3E');"></div>
+  </div>
+
+  <!-- 3. 21st.dev Animated Cyber Angle Dynamic Grid (Subtle Base) -->
   <div class="fixed inset-0 z-[-4] overflow-hidden pointer-events-none bg-[#050505]">
     <div id="dynamic-bg-img" class="absolute inset-0 bg-21st-cyber opacity-70"></div>
   </div>
 
-  <!-- 2. Ambient Light Rays (Electric Purple, Cyan & Emerald) -->
-  <div class="fixed inset-0 z-[-3] overflow-hidden pointer-events-none opacity-45 mix-blend-screen">
+  <!-- 4. Desktop Ambient Light Rays (Electric Purple, Cyan & Emerald) -->
+  <div class="fixed inset-0 z-[-3] overflow-hidden pointer-events-none opacity-45 mix-blend-screen hidden md:block">
     <div class="absolute top-[-12%] left-[25%] w-[60vw] h-[60vw] bg-[radial-gradient(circle_at_center,rgba(168,85,247,0.25)_0%,transparent_65%)]"></div>
     <div class="absolute top-[35%] right-[-10%] w-[55vw] h-[55vw] bg-[radial-gradient(circle_at_center,rgba(56,189,248,0.20)_0%,transparent_65%)]"></div>
     <div class="absolute bottom-[-10%] left-[10%] w-[50vw] h-[50vw] bg-[radial-gradient(circle_at_center,rgba(16,185,129,0.12)_0%,transparent_65%)]"></div>
   </div>
 
-  <!-- 3. Dark Vignette Overlay (Guarantees clean dark UI and razor-sharp readability) -->
+  <!-- 5. Dark Vignette Overlay -->
   <div class="fixed inset-0 z-[-2] bg-gradient-to-b from-transparent via-[#050505]/40 to-[#050505] pointer-events-none"></div>
 
-  <!-- Header (Glass) -->
-  <header class="sticky top-0 z-50 glass-panel border-b-0 border-white/10 shadow-lg">
-    <div class="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
-      <div class="text-2xl font-bold tracking-wider uppercase text-white flex items-center gap-2 cursor-pointer" id="header-name" style="font-family: 'Rajdhani', sans-serif;">
+  <!-- Header (Ultra-crisp Frosted Scrim with safe-area support) -->
+  <header class="sticky top-0 z-50 bg-black/40 backdrop-blur-md border-b border-white/10 shadow-2xl transition-all duration-300" style="padding-top: max(0.25rem, env(safe-area-inset-top));">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
+      <div class="text-xl sm:text-2xl font-bold tracking-wider uppercase text-white flex items-center gap-2 cursor-pointer select-none" id="header-name" style="font-family: 'Rajdhani', sans-serif;">
         <!-- Injected via JS -->
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-3 sm:gap-4">
         <a href="#social-carousel" class="hidden sm:inline-block text-xs uppercase tracking-wider text-gray-400 hover:text-white transition">Reels & TikToks</a>
-        <a href="#contact" class="animate-shimmer px-6 py-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-sm font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+        <a href="#horizontal-portfolio" class="hidden sm:inline-block text-xs uppercase tracking-wider text-gray-400 hover:text-white transition">16:9 Cuts</a>
+        <a href="#contact" class="animate-shimmer px-5 sm:px-6 py-2.5 min-h-[44px] flex items-center justify-center bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 text-white text-xs sm:text-sm font-semibold rounded-full transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,255,255,0.25)] active:scale-95">
           Contact Me
         </a>
       </div>
@@ -266,7 +297,7 @@
     </section>
 
     <!-- NATIVE HORIZONTAL SCROLLING CAROUSEL (Optimized for High Performance) -->
-    <section id="social-carousel" class="w-full relative py-8 fade-up delay-100">
+    <section id="social-carousel" class="w-full relative py-8 fade-up delay-100 scroll-mt-24">
       
       <!-- Section Header -->
       <div class="max-w-7xl mx-auto px-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -278,7 +309,7 @@
           <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Instagram Reels & TikToks
           </h2>
-          <p class="text-gray-400 text-sm mt-1">Scroll to explore. Videos play automatically when visible on screen.</p>
+          <p class="text-gray-400 text-sm mt-1">Swipe or scroll to explore. Tap any project to watch in master quality.</p>
         </div>
 
         <!-- Carousel Controls -->
@@ -308,7 +339,7 @@
     </section>
 
     <!-- HORIZONTAL VIDEOS GRID -->
-    <section id="horizontal-portfolio" class="w-full relative py-8 fade-up delay-200">
+    <section id="horizontal-portfolio" class="w-full relative py-8 fade-up delay-200 scroll-mt-24">
       <div class="max-w-7xl mx-auto px-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-xs text-blue-400 font-medium mb-3">
@@ -318,7 +349,7 @@
           <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight">
             Cinematic & Commercial
           </h2>
-          <p class="text-gray-400 text-sm mt-1">High-end horizontal edits and color grading.</p>
+          <p class="text-gray-400 text-sm mt-1">16:9 widescreen edits, color grading, and commercial storytelling.</p>
         </div>
       </div>
 
@@ -333,55 +364,67 @@
   </main>
 
   <!-- Contact Footer (Glass) -->
-  <footer id="contact" class="glass-panel border-t border-white/10 mt-12 py-20 relative overflow-hidden fade-up delay-300">
+  <footer id="contact" class="glass-panel border-t border-white/10 mt-12 py-20 relative overflow-hidden fade-up delay-300 scroll-mt-24">
     <div class="absolute inset-0 bg-gradient-to-t from-purple-900/10 to-transparent"></div>
     <div class="max-w-5xl mx-auto px-6 text-center space-y-10 relative z-10">
       <h2 class="text-4xl font-bold text-white tracking-tight">Ready to collaborate?</h2>
       <p class="text-gray-400 max-w-xl mx-auto">Drop me a message on any of these platforms and let's bring your next project to life.</p>
       
       <div class="flex flex-col sm:flex-row justify-center items-center gap-4 text-gray-200">
-        <a id="contact-email" href="#" class="group flex items-center gap-3 text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300 glass-panel px-8 py-4 rounded-2xl w-full sm:w-auto hover:-translate-y-1 hover:shadow-lg hover:shadow-white/10 hover:border-white/30 border border-white/20">
-          <i data-lucide="mail" class="w-5 h-5 text-white transition-colors"></i> 
-          <span id="email-text" class="font-medium text-sm">email</span>
+        <a id="contact-email" href="mailto:aymen.bm.editing@gmail.com" class="group flex items-center justify-center gap-3 text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300 glass-panel px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl w-full sm:w-auto hover:-translate-y-1 hover:shadow-lg hover:shadow-white/10 hover:border-white/30 border border-white/20 active:scale-95">
+          <i data-lucide="mail" class="w-5 h-5 text-purple-400 group-hover:scale-110 transition-transform"></i> 
+          <span id="email-text" class="font-medium text-sm">aymen.bm.editing@gmail.com</span>
         </a>
         
-        <a id="contact-wa" href="#" target="_blank" class="group flex items-center gap-3 text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300 glass-panel px-8 py-4 rounded-2xl w-full sm:w-auto hover:-translate-y-1 hover:shadow-lg hover:shadow-white/10 hover:border-white/30 border border-white/20">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white transition-colors">
+        <a id="contact-wa" href="https://wa.me/qr/YENYYVTN57SEG1" target="_blank" class="group flex items-center justify-center gap-3 text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300 glass-panel px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl w-full sm:w-auto hover:-translate-y-1 hover:shadow-lg hover:shadow-emerald-500/10 hover:border-emerald-500/30 border border-white/20 active:scale-95">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-emerald-400 group-hover:scale-110 transition-transform">
             <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
           </svg>
-          <span id="wa-text" class="font-medium text-sm">whatsapp</span>
+          <span id="wa-text" class="font-medium text-sm">Chat on WhatsApp</span>
         </a>
         
-        <a id="contact-ig" href="#" target="_blank" class="group flex items-center gap-3 text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300 glass-panel px-8 py-4 rounded-2xl w-full sm:w-auto hover:-translate-y-1 hover:shadow-lg hover:shadow-white/10 hover:border-white/30 border border-white/20">
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white transition-colors">
+        <a id="contact-ig" href="https://instagram.com/aymen_bm__" target="_blank" class="group flex items-center justify-center gap-3 text-gray-200 hover:text-white hover:bg-white/10 transition-all duration-300 glass-panel px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl w-full sm:w-auto hover:-translate-y-1 hover:shadow-lg hover:shadow-pink-500/10 hover:border-pink-500/30 border border-white/20 active:scale-95">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-pink-400 group-hover:scale-110 transition-transform">
             <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
             <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
             <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
           </svg>
-          <span id="ig-text" class="font-medium text-sm">instagram</span>
+          <span id="ig-text" class="font-medium text-sm">@aymen_bm__</span>
         </a>
+      </div>
+
+      <!-- Studio Micro-Footer -->
+      <div class="pt-8 border-t border-white/10 text-xs text-gray-500 flex flex-col sm:flex-row items-center justify-between gap-2">
+        <span>© 2026 Aymen BM • Precision Post-Production</span>
+        <span class="text-gray-400">Crafted for High-Impact Brands & Creators</span>
       </div>
     </div>
   </footer>
 
-  <!-- Full-Screen Native TikTok/Reels Video Modal -->
-  <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 opacity-0 pointer-events-none transition-opacity duration-300 p-0 sm:p-4" style="will-change: opacity; transform: translateZ(0);">
+  <!-- Unified Video Modal (Vertical Reels / TikTok + Horizontal Cinema Theater) -->
+  <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md opacity-0 pointer-events-none transition-opacity duration-300 p-0 sm:p-4" style="will-change: opacity; transform: translateZ(0);">
+    
+    <!-- 1. VERTICAL VIEW (Reels & TikToks Mode) -->
     <div id="modal-card" class="relative w-full h-[100dvh] sm:h-[86vh] sm:aspect-[9/16] sm:w-auto rounded-none sm:rounded-[2rem] bg-black overflow-hidden shadow-2xl flex flex-col sm:border sm:border-white/20 group" style="will-change: transform;">
       
       <!-- Video Container -->
       <div class="w-full h-full bg-black relative flex items-center justify-center overflow-hidden touch-none" id="modal-video-container">
-        <!-- Injected dynamically via JS -->
+        <video id="modal-vertical-video" class="w-full h-full object-cover transition-opacity duration-300" autoplay loop playsinline webkit-playsinline preload="auto"></video>
       </div>
 
       <!-- Top Gradient (for controls visibility) -->
-      <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/70 to-transparent z-30 pointer-events-none"></div>
+      <div class="absolute top-0 inset-x-0 h-32 bg-gradient-to-b from-black/80 via-black/30 to-transparent z-30 pointer-events-none"></div>
 
-      <!-- Top Action Bar (Clean Controls) -->
-      <div class="absolute top-12 sm:top-5 right-4 sm:right-5 z-40 flex items-center gap-2 pointer-events-auto">
-        <button id="modal-mute-btn" aria-label="Toggle Sound" class="p-2.5 sm:p-3 rounded-full bg-black/50 hover:bg-white/20 backdrop-blur-md text-white transition border border-white/10 shadow-lg">
-          <i data-lucide="volume-2" id="modal-mute-icon" class="w-5 h-5"></i>
+      <!-- Top Action Bar (Clean Frosted Controls with Safe-Area margin) -->
+      <div class="absolute top-4 sm:top-5 right-4 sm:right-5 z-40 flex items-center gap-2 pointer-events-auto" style="margin-top: env(safe-area-inset-top, 0px);">
+        <button id="modal-quality-btn" aria-label="Toggle Quality" class="min-h-[42px] px-3.5 py-1.5 rounded-full bg-black/40 backdrop-blur-md hover:bg-white/20 text-white transition border border-white/20 shadow-lg text-[11px] font-mono font-bold flex items-center gap-1.5 cursor-pointer active:scale-95">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" id="modal-quality-dot"></span>
+          <span id="modal-quality-badge">SD</span>
         </button>
-        <button id="modal-close" aria-label="Close Video" class="p-2.5 sm:p-3 rounded-full bg-black/50 hover:bg-white/20 backdrop-blur-md text-white transition border border-white/10 shadow-lg">
+        <button id="modal-mute-btn" aria-label="Toggle Sound" class="min-h-[42px] min-w-[42px] p-2.5 rounded-full bg-black/40 backdrop-blur-md hover:bg-white/20 text-white transition border border-white/10 shadow-lg cursor-pointer active:scale-95 flex items-center justify-center">
+          <span id="modal-mute-icon-box" class="flex items-center justify-center"><i data-lucide="volume-2" id="modal-mute-icon" class="w-5 h-5"></i></span>
+        </button>
+        <button id="modal-close" aria-label="Close Video" class="min-h-[42px] min-w-[42px] p-2.5 rounded-full bg-black/40 backdrop-blur-md hover:bg-white/20 text-white transition border border-white/10 shadow-lg cursor-pointer active:scale-95 flex items-center justify-center">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
@@ -391,86 +434,202 @@
         <i data-lucide="heart" class="w-24 h-24 text-rose-500 fill-rose-500 drop-shadow-[0_0_25px_rgba(244,63,94,0.9)]"></i>
       </div>
 
-      <!-- Horizontal Top Info Bar (Hidden by default, shifted down) -->
-      <div id="modal-hz-info" class="absolute top-14 sm:top-6 left-4 sm:left-6 z-40 pointer-events-none hidden">
-        <div>
-          <h3 id="modal-hz-title" class="text-base sm:text-lg font-bold text-white drop-shadow-md">Video Title</h3>
-          <p id="modal-hz-category" class="text-xs text-gray-300 drop-shadow-md mt-0.5">Category</p>
-        </div>
-      </div>
-
       <!-- Bottom Gradient (for text readability) -->
       <div id="modal-social-gradient" class="absolute bottom-0 inset-x-0 h-64 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-30 pointer-events-none"></div>
 
       <!-- Bottom Left Info (TikTok Style) -->
-      <div id="modal-social-info" class="absolute bottom-12 left-4 right-20 z-40 pointer-events-none flex flex-col gap-1 sm:bottom-10 sm:left-6 sm:gap-2">
+      <div id="modal-social-info" class="absolute bottom-10 left-4 right-20 z-40 pointer-events-none flex flex-col gap-1 sm:bottom-10 sm:left-6 sm:gap-2">
         <h3 id="modal-title" class="text-base sm:text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] leading-tight">Video Title</h3>
-        <span id="modal-category" class="inline-flex w-max px-2.5 py-1 rounded bg-white/20 backdrop-blur-md text-xs font-semibold text-white border border-white/20 shadow-sm">Category</span>
+        <span id="modal-category" class="inline-flex w-max px-2.5 py-1 rounded bg-black/60 text-xs font-semibold text-white border border-white/20 shadow-sm">Category</span>
       </div>
 
       <!-- Floating Minimalist Icon Buttons (Right Side) -->
-      <div id="modal-social-actions" class="absolute right-4 bottom-12 flex flex-col gap-4 sm:gap-5 z-40 sm:right-6 sm:bottom-10 items-center">
+      <div id="modal-social-actions" class="absolute right-4 bottom-10 flex flex-col gap-3.5 sm:gap-4 z-40 sm:right-6 sm:bottom-10 items-center">
         <!-- Like -->
-        <button id="modal-like-btn" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-white/20 hover:border-red-500/50 transition-all group/btn shadow-lg">
-          <i data-lucide="heart" id="modal-like-icon" class="w-5 h-5 sm:w-6 sm:h-6 text-white transition-colors"></i>
-          <span class="absolute right-14 bg-black/80 px-2 py-1 rounded text-[10px] text-white opacity-0 group-hover/btn:opacity-100 transition whitespace-nowrap pointer-events-none border border-white/10 hidden sm:block">Like</span>
+        <button id="modal-like-btn" class="w-12 h-12 rounded-full bg-black/60 flex flex-col items-center justify-center border border-white/10 hover:bg-white/20 hover:border-red-500/50 transition-all group/btn shadow-lg cursor-pointer active:scale-95">
+          <span id="modal-like-icon-box" class="flex items-center justify-center"><i data-lucide="heart" id="modal-like-icon" class="w-5 h-5 sm:w-6 sm:h-6 text-white transition-colors"></i></span>
+          <span id="modal-vert-like-count" class="text-[9px] font-mono text-white/90 leading-none mt-0.5">42</span>
         </button>
-        <!-- Comment -->
-        <button id="modal-comment-btn" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center border border-white/10 hover:bg-white/20 hover:border-blue-500/50 transition-all group/btn shadow-lg">
+        <!-- Comment / Reviews -->
+        <button id="modal-comment-btn" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-black/60 flex flex-col items-center justify-center border border-white/10 hover:bg-white/20 hover:border-blue-500/50 transition-all group/btn shadow-lg cursor-pointer active:scale-95">
           <i data-lucide="message-circle" class="w-5 h-5 sm:w-6 sm:h-6 text-white transition-colors"></i>
-          <span class="absolute right-14 bg-black/80 px-2 py-1 rounded text-[10px] text-white opacity-0 group-hover/btn:opacity-100 transition whitespace-nowrap pointer-events-none border border-white/10 hidden sm:block">Client Reviews</span>
+          <span id="modal-vert-comment-count" class="text-[9px] font-mono text-white/90 leading-none mt-0.5">3</span>
         </button>
         <!-- Order -->
-        <a id="modal-order-btn" href="#contact" class="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center hover:scale-110 shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all group/btn">
+        <a id="modal-order-btn" href="#contact" class="w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-gradient-to-tr from-purple-600 to-blue-600 flex items-center justify-center hover:scale-110 shadow-[0_0_15px_rgba(168,85,247,0.4)] transition-all group/btn active:scale-95">
           <i data-lucide="sparkles" class="w-5 h-5 sm:w-6 sm:h-6 text-white"></i>
-          <span class="absolute right-14 bg-black/80 px-2 py-1 rounded text-[10px] text-white opacity-0 group-hover/btn:opacity-100 transition whitespace-nowrap pointer-events-none border border-white/10 hidden sm:block">Order Similar</span>
         </a>
       </div>
 
       <!-- Play/Pause Indicator -->
       <div id="modal-play-indicator" class="absolute inset-0 flex items-center justify-center z-20 pointer-events-none opacity-0 transition-opacity duration-300">
-        <div class="w-16 h-16 bg-black/40 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20">
+        <div class="w-16 h-16 bg-black/60 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/20 shadow-2xl">
           <i data-lucide="play" id="modal-play-icon" class="w-8 h-8 ml-1 fill-white"></i>
         </div>
       </div>
 
-      <!-- Custom Progress Bar (Enlarged hit area for mobile) -->
       <div class="absolute bottom-0 left-0 right-0 h-6 z-30 cursor-pointer flex items-end" id="modal-progress-container">
         <div class="w-full h-1.5 bg-white/20 relative">
-          <div class="h-full bg-purple-500 w-0 shadow-[0_0_10px_purple] relative" id="modal-progress-bar">
-            <!-- Scrubber dot -->
-            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow blur-[0.5px] scale-0 transition-transform" id="modal-progress-dot"></div>
+          <div class="absolute left-0 top-0 h-full bg-gradient-to-r from-purple-500 to-pink-500 w-full origin-left scale-x-0 will-change-transform" id="modal-progress-bar"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. HORIZONTAL VIEW (16:9 Cinema Theater Mode - 100% Buttons OUTSIDE Player!) -->
+    <div id="modal-horizontal-view" class="w-full max-w-3xl max-h-[100dvh] overflow-y-auto no-scrollbar flex flex-col justify-center items-center p-3 sm:p-5 relative z-10 hidden my-auto" style="padding-top: max(0.75rem, env(safe-area-inset-top)); padding-bottom: max(0.75rem, env(safe-area-inset-bottom));">
+      
+      <div class="w-full flex flex-col gap-3">
+        <!-- Top Action Bar (100% OUTSIDE the video player) -->
+        <div class="w-full flex items-center justify-between py-1 z-30 flex-shrink-0 px-0.5">
+          <!-- Left: Back Button & Format Pill -->
+          <div class="flex items-center gap-2.5">
+            <button id="modal-hz-close-back" aria-label="Close" class="min-h-[42px] px-3.5 py-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition border border-white/15 flex items-center gap-1.5 cursor-pointer shadow-lg active:scale-95">
+              <i data-lucide="arrow-left" class="w-4 h-4"></i>
+              <span class="text-xs font-semibold uppercase tracking-wider">Back</span>
+            </button>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30 flex items-center gap-1">
+                <i data-lucide="monitor" class="w-3 h-3"></i>
+                <span id="modal-hz-category-badge">16:9 Cinema</span>
+              </span>
+            </div>
+          </div>
+
+          <!-- Right: SD/HD Quality Toggle, Mute, Close (100% OUTSIDE Player) -->
+          <div class="flex items-center gap-2 pointer-events-auto">
+            <button id="modal-hz-mute-btn" aria-label="Toggle Sound" class="min-h-[42px] min-w-[42px] p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition border border-white/15 shadow-lg cursor-pointer active:scale-95 flex items-center justify-center">
+              <span id="modal-hz-mute-icon-box" class="flex items-center justify-center"><i data-lucide="volume-2" class="w-4 h-4 sm:w-5 sm:h-5"></i></span>
+            </button>
+            <button id="modal-hz-quality-btn" aria-label="Toggle Quality" class="min-h-[42px] px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition border border-white/20 shadow-lg text-[11px] font-mono font-bold flex items-center gap-1.5 cursor-pointer active:scale-95">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" id="modal-hz-quality-dot"></span>
+              <span id="modal-hz-quality-badge">SD</span>
+            </button>
+            <button id="modal-hz-close-btn" aria-label="Close Video" class="min-h-[42px] min-w-[42px] p-2.5 rounded-full bg-white/10 hover:bg-white/20 text-white transition border border-white/15 shadow-lg cursor-pointer active:scale-95 flex items-center justify-center">
+              <i data-lucide="x" class="w-4 h-4 sm:w-5 sm:h-5"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Center Theater: 16:9 Video Player (Zero Overlapping Buttons!) -->
+        <div class="relative w-full aspect-video rounded-2xl bg-black overflow-hidden shadow-[0_15px_50px_rgba(0,0,0,0.85)] border border-white/15 group/theater" id="modal-hz-player-box">
+          <!-- Video Element -->
+          <div id="modal-hz-video-container" class="w-full h-full bg-black relative flex items-center justify-center cursor-pointer">
+            <video id="modal-horizontal-video" class="w-full h-full object-contain transition-opacity duration-300" autoplay loop playsinline webkit-playsinline preload="auto"></video>
+          </div>
+
+          <!-- Prominent Center Play Button in Horizontal Player -->
+          <div id="modal-hz-center-play" class="absolute inset-0 flex items-center justify-center transition-all duration-300 opacity-0 pointer-events-auto cursor-pointer z-20 bg-black/25 backdrop-blur-[1px]">
+            <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/75 backdrop-blur-md border border-white/30 text-white flex items-center justify-center shadow-[0_0_30px_rgba(59,130,246,0.45)] transform scale-95 hover:scale-105 active:scale-90 transition-all cursor-pointer">
+              <i data-lucide="play" id="modal-hz-center-play-icon" class="w-8 h-8 ml-1 fill-white"></i>
+            </div>
+          </div>
+
+          <!-- Flash Tap Feedback Indicator -->
+          <div id="modal-hz-flash-indicator" class="absolute inset-0 flex items-center justify-center pointer-events-none opacity-0 transition-opacity duration-200 z-20">
+            <div class="w-14 h-14 rounded-full bg-black/80 backdrop-blur-sm border border-white/30 flex items-center justify-center text-white" id="modal-hz-flash-icon-box">
+              <i data-lucide="play" class="w-6 h-6 fill-white"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Custom Transport Controls Bar (OUTSIDE the video player, directly below it) -->
+        <div class="w-full max-w-full px-1 flex flex-col gap-1.5 z-30">
+          <!-- Scrubber Bar -->
+          <div class="relative w-full h-5 flex items-center cursor-pointer group/scrub" id="modal-hz-progress-container">
+            <div class="w-full h-1.5 group-hover/scrub:h-2.5 bg-white/20 rounded-full overflow-hidden transition-all relative">
+              <div id="modal-hz-progress-bar" class="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500 rounded-full w-full origin-left scale-x-0 will-change-transform"></div>
+            </div>
+          </div>
+
+          <!-- Transport Info Row: Play/Pause button, Timestamps, Fullscreen -->
+          <div class="flex items-center justify-between text-xs text-gray-300 px-0.5">
+            <div class="flex items-center gap-2.5">
+              <button id="modal-hz-play-pause-btn" class="min-h-[38px] px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white transition flex items-center gap-2 cursor-pointer active:scale-95">
+                <span id="modal-hz-transport-icon-box" class="flex items-center justify-center"><i data-lucide="play" class="w-3.5 h-3.5 fill-current"></i></span>
+                <span id="modal-hz-transport-text" class="text-[11px] font-semibold uppercase tracking-wider">Play</span>
+              </button>
+              <span class="font-mono text-[11px] text-gray-300 bg-white/5 px-2 py-1 rounded border border-white/10" id="modal-hz-time-display">0:00 / 0:18</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <button id="modal-hz-fullscreen-btn" aria-label="Toggle Fullscreen" class="min-h-[38px] min-w-[38px] rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-gray-300 hover:text-white transition flex items-center justify-center cursor-pointer active:scale-95">
+                <i data-lucide="maximize" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bottom Action Deck (100% OUTSIDE the video player) -->
+        <div class="w-full bg-[#111116]/80 backdrop-blur-xl border border-white/10 rounded-2xl p-3.5 sm:p-4 space-y-3 z-30">
+          <!-- Title & Tags Row -->
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5">
+            <h3 id="modal-hz-title" class="text-base sm:text-lg font-bold text-white tracking-tight">Project Title</h3>
+            <div class="flex items-center gap-1.5 flex-wrap" id="modal-hz-tags">
+              <!-- Injected via JS -->
+            </div>
+          </div>
+
+          <!-- Action Buttons Row (Like, Reviews, Order CTA) -->
+          <div class="flex items-center justify-between gap-2.5 sm:gap-4 pt-1 flex-wrap sm:flex-nowrap">
+            <div class="flex items-center gap-2">
+              <!-- Like Button -->
+              <button id="modal-hz-like-btn" class="min-h-[44px] px-3.5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white flex items-center gap-2 transition-all active:scale-95 cursor-pointer group/like">
+                <span id="modal-hz-like-icon-box" class="flex items-center justify-center"><i data-lucide="heart" class="w-4 h-4 transition-colors"></i></span>
+                <span class="text-xs font-semibold" id="modal-hz-like-text">Like</span>
+                <span class="text-xs font-mono font-bold text-gray-400 group-hover/like:text-white" id="modal-hz-like-count">38</span>
+              </button>
+
+              <!-- Reviews Button -->
+              <button id="modal-hz-comment-btn" class="min-h-[44px] px-3.5 py-2 rounded-full bg-white/10 hover:bg-white/20 border border-white/15 text-white flex items-center gap-2 transition-all active:scale-95 cursor-pointer">
+                <i data-lucide="message-circle" class="w-4 h-4 text-blue-400"></i>
+                <span class="text-xs font-semibold">Reviews</span>
+                <span class="text-xs font-mono font-bold text-gray-400" id="modal-hz-comment-count">2</span>
+              </button>
+            </div>
+
+            <!-- Primary CTA: Inquire About Project -->
+            <a id="modal-hz-order-btn" href="#contact" class="flex-1 min-h-[44px] px-5 py-2.5 rounded-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-xs sm:text-sm flex items-center justify-center gap-2 shadow-[0_0_20px_rgba(59,130,246,0.35)] transition-all hover:scale-102 active:scale-95 whitespace-nowrap">
+              <i data-lucide="sparkles" class="w-4 h-4 text-yellow-300"></i>
+              <span>Inquire About Project</span>
+            </a>
           </div>
         </div>
       </div>
 
-      <!-- Comments Drawer (Slides Up) -->
-      <div id="comments-drawer" class="absolute inset-x-0 bottom-0 top-1/2 bg-black/80 backdrop-blur-2xl border-t border-white/10 transform translate-y-full transition-transform duration-300 z-40 rounded-t-3xl p-5 flex flex-col">
-        <div class="flex justify-between items-center mb-4">
-          <h4 class="text-white font-semibold flex items-center gap-2 text-sm"><i data-lucide="message-circle" class="w-4 h-4 text-blue-400"></i> Client Reviews & Comments</h4>
-          <button id="close-comments" class="text-gray-400 hover:text-white p-1 bg-white/5 rounded-full"><i data-lucide="x" class="w-4 h-4"></i></button>
-        </div>
-        <div class="flex-1 overflow-y-auto space-y-4 no-scrollbar" id="comments-list">
-          <!-- Comments injected via JS -->
-        </div>
-        <a href="mailto:aymen.bm.editing@gmail.com?subject=I want to leave a review!" class="mt-4 w-full py-2.5 rounded-xl glass-panel text-xs font-semibold text-center text-white hover:bg-white/10 transition border border-white/10">
-          Write a Review
-        </a>
-      </div>
-
     </div>
+
+    <!-- SHARED COMMENTS DRAWER (Slides up over modal) -->
+    <div id="comments-drawer" class="absolute inset-x-0 bottom-0 max-h-[70vh] h-auto bg-[#0d0d12] border-t border-white/15 transform translate-y-full transition-transform duration-300 z-50 rounded-t-3xl p-5 flex flex-col shadow-2xl">
+      <div class="flex justify-between items-center mb-4">
+        <h4 class="text-white font-semibold flex items-center gap-2 text-sm">
+          <i data-lucide="message-circle" class="w-4 h-4 text-blue-400"></i> Client Reviews & Feedback
+        </h4>
+        <button id="close-comments" aria-label="Close Reviews" class="text-gray-400 hover:text-white p-2 min-w-[40px] min-h-[40px] flex items-center justify-center bg-white/5 hover:bg-white/10 rounded-full active:scale-95">
+          <i data-lucide="x" class="w-4 h-4"></i>
+        </button>
+      </div>
+      <div class="flex-1 overflow-y-auto space-y-3.5 no-scrollbar max-h-[45vh]" id="comments-list">
+        <!-- Comments injected via JS -->
+      </div>
+      <a id="drawer-review-btn" href="mailto:aymen.bm.editing@gmail.com?subject=Client%20Review" class="mt-4 w-full min-h-[44px] py-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition border border-white/10 text-xs sm:text-sm font-semibold text-center text-white active:scale-95 flex items-center justify-center gap-2">
+        <i data-lucide="edit-3" class="w-4 h-4"></i>
+        <span>Write a Review</span>
+      </a>
+    </div>
+
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/projects-data.js?v=41"></script>
-  <script src="assets/js/app.js?v=41"></script>
+  <script src="assets/js/projects-data.js?v=43"></script>
+  <script src="assets/js/app.js?v=43"></script>
 
-  <!-- 3D Neon Tubes Cursor Trail Engine -->
+  <!-- 3D Neon Tubes Cursor Trail Engine (Desktop Only) -->
   <script type="module">
     import TubesCursor from "https://cdn.jsdelivr.net/npm/threejs-components@0.0.19/build/cursors/tubes1.min.js";
     
+    const isDesktop = window.matchMedia('(min-width: 768px) and (pointer: fine)').matches;
     const canvas = document.getElementById('canvas');
-    if (canvas) {
+
+    if (canvas && isDesktop) {
       // Intercept WebGL context to completely freeze GPU work when video modal is open
       const originalGetContext = canvas.getContext.bind(canvas);
       canvas.getContext = function(type, options) {
@@ -498,56 +657,28 @@
 
       try {
         const tubesApp = TubesCursor(canvas, {
-          // Radiant luminous bloom glow restored!
+          // Original High-Fidelity Radiant Bloom & Tubes Restored for Desktop
           bloom: {
             threshold: 0,
             strength: 1.5,
             radius: 0.5
           },
           tubes: {
-            count: 3,                  // Exactly 3 clean glowing neon particles/tubes
+            count: 14,
             minTubularSegments: 32,
             maxTubularSegments: 64,
-            colors: ["#f967fb", "#38bdf8", "#a855f7"],
+            colors: ["#a855f7", "#38bdf8", "#ec4899"],
             lerp: 0.85,
-            noise: 0.06,
-            minRadius: 0.014,
-            maxRadius: 0.08,
+            noise: 0.065,
+            minRadius: 0.008,
+            maxRadius: 0.06,
             lights: {
-              intensity: 280,          // Vibrant radiant neon glow
+              intensity: 220,
               colors: ["#8b5cf6", "#06b6d4", "#f43f5e", "#3b82f6"]
             }
           }
         });
         window.tubesApp = tubesApp;
-
-        // Hyper-sensitive Touch & Pointer Tracking
-        const forwardTouch = (e) => {
-          if (e.touches && e.touches.length > 0) {
-            const touch = e.touches[0];
-            document.body.dispatchEvent(new PointerEvent('pointermove', {
-              clientX: touch.clientX,
-              clientY: touch.clientY,
-              bubbles: true
-            }));
-          }
-        };
-
-        // Light touch immediately ignites glow & snaps tubes to finger position
-        window.addEventListener('touchstart', (e) => {
-          forwardTouch(e);
-          if (tubesApp && tubesApp.tubes && typeof tubesApp.tubes.setLightsIntensity === 'function') {
-            tubesApp.tubes.setLightsIntensity(320);
-          }
-        }, { passive: true });
-
-        window.addEventListener('touchmove', forwardTouch, { passive: true });
-
-        window.addEventListener('touchend', () => {
-          if (tubesApp && tubesApp.tubes && typeof tubesApp.tubes.setLightsIntensity === 'function') {
-            tubesApp.tubes.setLightsIntensity(220);
-          }
-        }, { passive: true });
 
         // Interactive color switch on background tap/click
         document.body.addEventListener('click', (e) => {
@@ -566,6 +697,8 @@
       } catch (err) {
         console.warn("Neon 3D Tubes unavailable:", err);
       }
+    } else if (canvas) {
+      canvas.style.display = 'none';
     }
   </script>
 </body>
