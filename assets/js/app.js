@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // 2. Build High-Performance Native Scroll Carousel
-  let isModalOpen = false;
+  window.isModalOpen = false;
   const cards = [];
   const marqueeTrack = document.getElementById("marquee-track");
   const videos = data.socialMediaVideos || [];
@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
     observer.observe(carouselTrackWrapper);
 
     function animateScroll() {
-      if (!isInteracting && !isModalOpen && isVisible) {
+      if (!isInteracting && !window.isModalOpen && isVisible) {
         carouselTrackWrapper.scrollLeft += scrollSpeed;
         
         // The track width is doubled because we appended items twice.
@@ -301,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!modal || !modalContainer) return;
     
     // Stop background animations and hide WebGL canvas to free 100% GPU for video
-    isModalOpen = true;
+    window.isModalOpen = true;
     const canvasBg = document.getElementById("canvas");
     if (canvasBg) canvasBg.style.display = 'none';
 
@@ -561,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = 'auto';
     
     // Resume background animations
-    isModalOpen = false;
+    window.isModalOpen = false;
     const canvasBg = document.getElementById("canvas");
     if (canvasBg) canvasBg.style.display = 'block';
   }

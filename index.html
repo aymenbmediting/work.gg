@@ -365,8 +365,8 @@
   </footer>
 
   <!-- Full-Screen Native TikTok/Reels Video Modal -->
-  <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-xl opacity-0 pointer-events-none transition-opacity duration-300 p-0 sm:p-4">
-    <div id="modal-card" class="relative w-full h-[100dvh] sm:h-[86vh] sm:aspect-[9/16] sm:w-auto rounded-none sm:rounded-[2rem] bg-black overflow-hidden shadow-2xl flex flex-col sm:border sm:border-white/20 group">
+  <div id="video-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 opacity-0 pointer-events-none transition-opacity duration-300 p-0 sm:p-4" style="will-change: opacity; transform: translateZ(0);">
+    <div id="modal-card" class="relative w-full h-[100dvh] sm:h-[86vh] sm:aspect-[9/16] sm:w-auto rounded-none sm:rounded-[2rem] bg-black overflow-hidden shadow-2xl flex flex-col sm:border sm:border-white/20 group" style="will-change: transform;">
       
       <!-- Video Container -->
       <div class="w-full h-full bg-black relative flex items-center justify-center overflow-hidden touch-none" id="modal-video-container">
@@ -471,6 +471,31 @@
     
     const canvas = document.getElementById('canvas');
     if (canvas) {
+      // Intercept WebGL context to completely freeze GPU work when video modal is open
+      const originalGetContext = canvas.getContext.bind(canvas);
+      canvas.getContext = function(type, options) {
+        const gl = originalGetContext(type, options);
+        if (gl && (type === 'webgl' || type === 'webgl2')) {
+          const originalClear = gl.clear.bind(gl);
+          const originalDrawArrays = gl.drawArrays.bind(gl);
+          const originalDrawElements = gl.drawElements.bind(gl);
+          
+          gl.clear = function(...args) {
+            if (window.isModalOpen) return;
+            return originalClear(...args);
+          };
+          gl.drawArrays = function(...args) {
+            if (window.isModalOpen) return;
+            return originalDrawArrays(...args);
+          };
+          gl.drawElements = function(...args) {
+            if (window.isModalOpen) return;
+            return originalDrawElements(...args);
+          };
+        }
+        return gl;
+      };
+
       try {
         const tubesApp = TubesCursor(canvas, {
           // Radiant luminous bloom glow restored!
@@ -480,16 +505,16 @@
             radius: 0.5
           },
           tubes: {
-            count: 10,                 // Leaner polygon count so GPU runs bloom effortlessly
-            minTubularSegments: 24,
-            maxTubularSegments: 48,
+            count: 3,                  // Exactly 3 clean glowing neon particles/tubes
+            minTubularSegments: 32,
+            maxTubularSegments: 64,
             colors: ["#f967fb", "#38bdf8", "#a855f7"],
             lerp: 0.85,
             noise: 0.06,
-            minRadius: 0.009,
-            maxRadius: 0.065,
+            minRadius: 0.014,
+            maxRadius: 0.08,
             lights: {
-              intensity: 260,          // Radiant neon lights
+              intensity: 280,          // Vibrant radiant neon glow
               colors: ["#8b5cf6", "#06b6d4", "#f43f5e", "#3b82f6"]
             }
           }
