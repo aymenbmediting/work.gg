@@ -1,10 +1,10 @@
-﻿Thumbs.db
+Thumbs.db
 .DS_Store
 OPTIMIZATION_REPORT.md
 compress.ps1
 background-preview.html
 node_modules/
-
+package.json
+package-lock.json
+scripts/
 *.png
-
-
