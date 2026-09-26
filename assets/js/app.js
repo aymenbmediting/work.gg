@@ -1,60 +1,11 @@
 document.addEventListener("DOMContentLoaded", () => {
   const data = PORTFOLIO_DATA;
 
-  // 1. Populate Profile Info & Futuristic Text Scramble
+  // 1. Populate Profile Info
   const headerName = document.getElementById("header-name");
-  const originalName = data.profile.name.toUpperCase();
-  const alternateName = "VIDEO EDITOR";
-  
-  // Hacker Text Effect
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
-  function triggerHackerEffect(element, text) {
-    if (!element) return;
-    let iterations = 0;
-    clearInterval(element.dataset.hackerInterval);
-    element.dataset.hackerInterval = setInterval(() => {
-      element.innerText = text.split("")
-        .map((letter, index) => {
-          if (letter === " ") return " ";
-          if (index < iterations) return text[index];
-          return letters[Math.floor(Math.random() * letters.length)];
-        })
-        .join("");
-      
-      if (iterations >= text.length) {
-        clearInterval(element.dataset.hackerInterval);
-        element.innerText = text;
-      }
-      iterations += 1 / 3;
-    }, 30);
+  if (headerName) {
+    headerName.textContent = data.profile.name.toUpperCase();
   }
-
-  // Initial load
-  headerName.dataset.currentText = originalName;
-  headerName.textContent = originalName;
-  triggerHackerEffect(headerName, originalName);
-  
-  // Hover interaction
-  headerName.addEventListener("mouseenter", () => {
-    triggerHackerEffect(headerName, headerName.dataset.currentText);
-  });
-
-  // Automated 15-second cycle (10s name, 5s title)
-  function startNameCycle() {
-    setTimeout(() => {
-      headerName.dataset.currentText = alternateName;
-      triggerHackerEffect(headerName, alternateName);
-      
-      setTimeout(() => {
-        headerName.dataset.currentText = originalName;
-        triggerHackerEffect(headerName, originalName);
-        startNameCycle(); // Loop
-      }, 5000);
-      
-    }, 10000);
-  }
-  
-  startNameCycle();
 
   // Populate Contact Info
   const emailLink = document.getElementById("contact-email");
@@ -168,10 +119,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Top Gradient with Category Pill -->
         <div class="absolute top-0 inset-x-0 p-3 sm:p-4 flex justify-between items-center bg-gradient-to-b from-black/80 via-black/30 to-transparent z-10 pointer-events-none">
-          <span class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-white/10 backdrop-blur-md text-white border border-white/15 shadow-sm">
+          <span class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-[#16161e] text-white border border-white/15 shadow-sm">
             ${videoItem.category}
           </span>
-          <span class="px-2.5 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 backdrop-blur-md text-blue-300 border border-blue-500/30 flex items-center gap-1.5 shadow-sm">
+          <span class="px-2.5 py-0.5 rounded text-[10px] font-mono bg-blue-900/60 text-blue-300 border border-blue-500/30 flex items-center gap-1.5 shadow-sm">
             <i data-lucide="monitor" class="w-3 h-3"></i>
             16:9 Cut
           </span>
@@ -179,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Center Play Button (Always visible on mobile & desktop, glowing on hover/active) -->
         <div class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
-          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/60 backdrop-blur-md border border-white/30 text-white flex items-center justify-center transform group-hover:scale-110 group-active:scale-95 transition-all duration-300 shadow-[0_0_30px_rgba(59,130,246,0.45)]">
+          <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-black/75 border border-white/30 text-white flex items-center justify-center transform group-hover:scale-110 group-active:scale-95 transition-all duration-300 shadow-[0_0_30px_rgba(59,130,246,0.45)]">
             <i data-lucide="play" class="w-7 h-7 sm:w-8 sm:h-8 ml-1 fill-white text-white"></i>
           </div>
         </div>
@@ -216,10 +167,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (window.lucide) window.lucide.createIcons();
 
-  // 4. Smooth Infinite Auto-Scroll Logic
+  const isMobileClient = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
+
+  // 4. Smooth Infinite Auto-Scroll Logic (Desktop Only - Saves 100% CPU on mobile)
   const carouselTrackWrapper = document.getElementById("carousel-track");
   
-  if (carouselTrackWrapper && marqueeTrack) {
+  if (carouselTrackWrapper && marqueeTrack && !isMobileClient) {
     let scrollSpeed = 0.5; // pixels per frame
     let isInteracting = false;
     
@@ -227,12 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
     carouselTrackWrapper.addEventListener("mouseenter", () => isInteracting = true);
     carouselTrackWrapper.addEventListener("mouseleave", () => isInteracting = false);
     
-    carouselTrackWrapper.addEventListener("touchstart", () => isInteracting = true, {passive: true});
-    carouselTrackWrapper.addEventListener("touchend", () => {
-      // Resume shortly after touching ends
-      setTimeout(() => isInteracting = false, 1000);
-    });
-
     // Check if the carousel is visible before animating to save CPU
     let isVisible = false;
     const observer = new IntersectionObserver((entries) => {
@@ -251,7 +198,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (carouselTrackWrapper.scrollLeft >= marqueeTrack.scrollWidth / 2) {
           carouselTrackWrapper.scrollLeft -= marqueeTrack.scrollWidth / 2;
         } else if (carouselTrackWrapper.scrollLeft <= 0) {
-          // If the user manually scrolled all the way to the left, bump it to the middle
           carouselTrackWrapper.scrollLeft += marqueeTrack.scrollWidth / 2;
         }
       }
@@ -351,7 +297,6 @@ document.addEventListener("DOMContentLoaded", () => {
   let isCurrentHorizontal = false;
   let isMuted = false;
 
-  const isMobileClient = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
   let preferredQuality = isMobileClient ? 'SD' : 'HD';
   let preloaderVideo = null;
 
@@ -402,7 +347,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function preloadAdjacentVideo(url) {
-    if (!url) return;
+    if (!url || isMobileClient) return; // Never preload a second video on mobile devices to prevent GPU saturation
     if (!preloaderVideo) {
       preloaderVideo = document.createElement("video");
       preloaderVideo.preload = "auto";
@@ -416,8 +361,8 @@ document.addEventListener("DOMContentLoaded", () => {
       if (b) b.textContent = preferredQuality;
     });
     const dotClass = (preferredQuality === 'HD')
-      ? "w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse shadow-[0_0_8px_cyan]"
-      : "w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse";
+      ? "w-1.5 h-1.5 rounded-full bg-cyan-400"
+      : "w-1.5 h-1.5 rounded-full bg-emerald-400";
     [modalQualityDot, modalHzQualityDot].forEach(d => {
       if (d) d.className = dotClass;
     });
@@ -697,7 +642,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!currentModalVideo) return;
 
     // Load active video source
-    const activeVideoSrc = (preferredQuality === 'HD' || isHorizontal)
+    const activeVideoSrc = (preferredQuality === 'HD')
       ? item.masterSrc
       : (item.mobileSrc || item.masterSrc);
 
