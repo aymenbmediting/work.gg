@@ -1,7 +1,7 @@
 const PORTFOLIO_DATA = {
   "profile": {
     "name": "Aymen BM",
-    "title": "Video Editor • Motion Graphics • <span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-rose-400'>Colorist</span>",
+    "title": "Video Editor • <span class='inline-block whitespace-nowrap'><span class='kinetic-wave' style='animation-delay: 0.0s'>M</span><span class='kinetic-wave' style='animation-delay: 0.1s'>o</span><span class='kinetic-wave' style='animation-delay: 0.2s'>t</span><span class='kinetic-wave' style='animation-delay: 0.3s'>i</span><span class='kinetic-wave' style='animation-delay: 0.4s'>o</span><span class='kinetic-wave' style='animation-delay: 0.5s'>n</span> <span class='kinetic-wave' style='animation-delay: 0.7s'>G</span><span class='kinetic-wave' style='animation-delay: 0.8s'>r</span><span class='kinetic-wave' style='animation-delay: 0.9s'>a</span><span class='kinetic-wave' style='animation-delay: 1.0s'>p</span><span class='kinetic-wave' style='animation-delay: 1.1s'>h</span><span class='kinetic-wave' style='animation-delay: 1.2s'>i</span><span class='kinetic-wave' style='animation-delay: 1.3s'>c</span><span class='kinetic-wave' style='animation-delay: 1.4s'>s</span></span> • <span class='text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-purple-400 to-rose-400'>Colorist</span>",
     "bio": "Post-production expert obsessed with the mechanics of a perfect cut. From viral social media loops to cinematic ads, I adapt my style frame-by-frame to captivate your audience and elevate your creative vision.",
     "contact": {
       "email": "aymen.bm.editing@gmail.com",

@@ -1,11 +1,71 @@
 document.addEventListener("DOMContentLoaded", () => {
   const data = PORTFOLIO_DATA;
 
-  // 1. Populate Profile Info
+  // 1. Populate Profile Info & Futuristic Text Scramble
   const headerName = document.getElementById("header-name");
-  if (headerName) {
-    headerName.textContent = data.profile.name.toUpperCase();
+  const originalName = data.profile.name.toUpperCase();
+  const alternateName = "VIDEO EDITOR";
+  
+  // Hacker Text Effect (Lightweight, auto-paused when video modal is open)
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*";
+  function triggerHackerEffect(element, text) {
+    if (!element || window.isModalOpen) return;
+    let iterations = 0;
+    clearInterval(element.dataset.hackerInterval);
+    element.dataset.hackerInterval = setInterval(() => {
+      if (window.isModalOpen) {
+        clearInterval(element.dataset.hackerInterval);
+        element.innerText = text;
+        return;
+      }
+      element.innerText = text.split("")
+        .map((letter, index) => {
+          if (letter === " ") return " ";
+          if (index < iterations) return text[index];
+          return letters[Math.floor(Math.random() * letters.length)];
+        })
+        .join("");
+      
+      if (iterations >= text.length) {
+        clearInterval(element.dataset.hackerInterval);
+        element.innerText = text;
+      }
+      iterations += 1 / 3;
+    }, 30);
   }
+
+  // Initial load
+  if (headerName) {
+    headerName.dataset.currentText = originalName;
+    headerName.textContent = originalName;
+    triggerHackerEffect(headerName, originalName);
+    
+    // Hover interaction
+    headerName.addEventListener("mouseenter", () => {
+      triggerHackerEffect(headerName, headerName.dataset.currentText);
+    });
+  }
+
+  // Automated 15-second cycle (10s name, 5s title)
+  function startNameCycle() {
+    setTimeout(() => {
+      if (!window.isModalOpen && headerName) {
+        headerName.dataset.currentText = alternateName;
+        triggerHackerEffect(headerName, alternateName);
+      }
+      
+      setTimeout(() => {
+        if (!window.isModalOpen && headerName) {
+          headerName.dataset.currentText = originalName;
+          triggerHackerEffect(headerName, originalName);
+        }
+        startNameCycle(); // Loop
+      }, 5000);
+      
+    }, 10000);
+  }
+  
+  startNameCycle();
 
   // Populate Contact Info
   const emailLink = document.getElementById("contact-email");
@@ -35,7 +95,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function createCard(videoItem) {
     const card = document.createElement("div");
-    card.className = "flex-shrink-0 w-[240px] sm:w-[280px] group relative rounded-[2rem] bg-[#111] overflow-hidden border border-white/10 hover:border-purple-500/50 transition-all duration-500 hover:scale-[1.02] cursor-pointer shadow-lg carousel-card";
+    card.className = "flex-shrink-0 w-[240px] sm:w-[280px] group relative rounded-[2rem] specular-card overflow-hidden hover:border-purple-500/50 transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-2xl carousel-card snap-start neon-tap";
     
     const posterPath = videoItem.poster || '';
 
@@ -103,7 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function createHorizontalCard(videoItem) {
     const card = document.createElement("div");
-    card.className = "w-full group relative rounded-3xl bg-[#111] overflow-hidden border border-white/10 hover:border-blue-500/50 transition-all duration-500 hover:scale-[1.01] active:scale-[0.99] cursor-pointer shadow-lg";
+    card.className = "w-full group relative rounded-3xl specular-card overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer shadow-2xl neon-tap";
 
     const posterPath = videoItem.poster || '';
 
