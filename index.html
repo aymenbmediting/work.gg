@@ -73,6 +73,7 @@
     .delay-400 { animation-delay: 400ms; }
     .delay-500 { animation-delay: 500ms; }
 
+
     /* Social Media Scroll Animations */
     @keyframes swipeUpOut {
       0% { transform: translateY(0) scale(1); opacity: 1; }
@@ -123,17 +124,21 @@
       background-size: 48px 48px;
     }
 
-    /* High-Performance Solid Panel (Zero GPU Backdrop Blur) */
+    /* 21st.dev Prismatic Neon Rim Glass Architecture */
     .glass-panel {
-      background: #111116;
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(14, 14, 24, 0.65);
+      border: 1px solid rgba(168, 85, 247, 0.25);
+      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.15), 0 16px 36px -10px rgba(0, 0, 0, 0.7);
     }
 
-    /* Beveled Sapphire Faux-Glass Card (100% Zero-Blur Shader Cost) */
+    /* Prismatic Neon Rim Glass Card (Translucent smoked glass + Cyan specular highlight + Violet rim) */
     .specular-card {
-      background: #0d0d12;
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.14), 0 12px 28px -8px rgba(0, 0, 0, 0.75);
+      background: rgba(12, 12, 20, 0.62) !important;
+      border: 1px solid rgba(168, 85, 247, 0.35) !important;
+      box-shadow: 
+        inset 0 1px 0 0 rgba(56, 189, 248, 0.40),
+        0 0 24px -6px rgba(168, 85, 247, 0.22),
+        0 20px 40px -15px rgba(0, 0, 0, 0.85) !important;
     }
 
     /* Tactile Spring Press with Subtle Neon Halo Glow */
@@ -153,6 +158,82 @@
     .no-scrollbar {
       -ms-overflow-style: none;
       scrollbar-width: none;
+    }
+
+    /* TikTok & Reels Snap Carousel Scroller (Modern Web Guidance) */
+    #carousel-track {
+      touch-action: pan-x pan-y !important;
+      -webkit-overflow-scrolling: touch !important;
+      scroll-snap-type: x mandatory !important;
+      overscroll-behavior-x: contain;
+      user-select: none;
+      -webkit-user-select: none;
+      /* Dynamic padding so the first & last reel snap dead-center in the viewport */
+      padding-left: calc(50vw - 130px);
+      padding-right: calc(50vw - 130px);
+    }
+    @media (min-width: 640px) {
+      #carousel-track {
+        padding-left: calc(50vw - 140px);
+        padding-right: calc(50vw - 140px);
+      }
+    }
+
+    .carousel-card {
+      scroll-snap-align: center !important;
+      scroll-snap-stop: always !important;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-user-drag: none;
+      transition: 
+        transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1),
+        opacity 320ms ease,
+        border-color 320ms ease,
+        box-shadow 320ms ease;
+      will-change: transform, opacity;
+      transform: scale(0.9) translateZ(0);
+      opacity: 0.65;
+    }
+
+    .carousel-card.is-active-tiktok {
+      transform: scale(1.04) translateZ(0) !important;
+      opacity: 1 !important;
+      border-color: rgba(168, 85, 247, 0.65) !important;
+      box-shadow: 
+        inset 0 1px 0 0 rgba(56, 189, 248, 0.55),
+        0 0 32px -4px rgba(168, 85, 247, 0.45),
+        0 25px 50px -12px rgba(0, 0, 0, 0.9) !important;
+      z-index: 20;
+    }
+
+    .carousel-card img {
+      pointer-events: none;
+      -webkit-user-drag: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* TikTok Carousel Slide Effects (Modern Web Guidance: Scroll-Driven Animations) */
+    @keyframes tiktokCardScroll {
+      0% {
+        transform: scale(0.88);
+        opacity: 0.6;
+      }
+      50% {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.88);
+        opacity: 0.6;
+      }
+    }
+
+    @supports ((animation-timeline: view()) and (animation-range: entry)) {
+      .carousel-card {
+        animation: tiktokCardScroll auto linear both;
+        animation-timeline: view(inline);
+      }
     }
 
     /* Mobile Cinematic Studio Stage Ambient Lights (Pre-baked CSS Canvas - 0% CPU/GPU overhead) */
@@ -190,8 +271,8 @@
   <!-- 5. Dark Vignette Overlay -->
   <div class="fixed inset-0 z-[-2] bg-gradient-to-b from-transparent via-[#050505]/40 to-[#050505] pointer-events-none"></div>
 
-  <!-- Header (Solid High-Performance Scrim) -->
-  <header class="sticky top-0 z-50 bg-[#0a0a0f] border-b border-white/10 shadow-2xl transition-all duration-300" style="padding-top: max(0.25rem, env(safe-area-inset-top));">
+  <!-- Header (Frosted Glass with Prismatic Rim Sheen) -->
+  <header class="sticky top-0 z-50 bg-[#08080e]/75 backdrop-blur-md border-b border-purple-500/25 shadow-2xl transition-all duration-300" style="padding-top: max(0.25rem, env(safe-area-inset-top));">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
       <div class="text-xl sm:text-2xl font-bold tracking-wider uppercase text-white flex items-center gap-2 cursor-pointer select-none" id="header-name" style="font-family: 'Rajdhani', sans-serif;">
         <!-- Injected via JS -->
@@ -210,7 +291,7 @@
   <main class="flex-grow w-full pt-8 md:pt-12 pb-12 space-y-12">
     
     <!-- Hero / About Section -->
-    <section class="max-w-5xl mx-auto px-6 fade-up relative space-y-6">
+    <section class="max-w-5xl mx-auto px-6 relative space-y-6">
       
       <!-- Status badge with Profile Pic on the left -->
       <div class="inline-flex items-center gap-3 pl-1.5 pr-4 py-1.5 rounded-full glass-panel text-xs text-emerald-400 font-medium border border-white/10 hover:border-emerald-500/40 transition shadow-sm">
@@ -244,7 +325,7 @@
       </div>
 
       <!-- Tools -->
-      <div class="pt-2 fade-up delay-100">
+      <div class="pt-2">
         <p class="text-xs text-gray-400 mb-4 uppercase tracking-widest font-semibold flex items-center gap-2">
           <i data-lucide="cpu" class="w-4 h-4 text-purple-400"></i> Core Arsenal
         </p>
@@ -256,7 +337,7 @@
       </div>
 
       <!-- Action Buttons -->
-      <div class="pt-4 flex flex-wrap gap-4 fade-up delay-200">
+      <div class="pt-4 flex flex-wrap gap-4">
         <a href="#social-carousel" class="neon-tap px-7 py-3.5 bg-white text-black font-semibold rounded-full hover:bg-gray-200 transition-all duration-300 flex items-center gap-2 shadow-lg shadow-white/10 hover:scale-105">
           <i data-lucide="play" class="w-4 h-4 fill-current"></i>
           <span>Watch Social Edits</span>
@@ -269,7 +350,7 @@
     </section>
 
     <!-- NATIVE HORIZONTAL SCROLLING CAROUSEL (Optimized for High Performance) -->
-    <section id="social-carousel" class="w-full relative py-8 fade-up delay-100 scroll-mt-24">
+    <section id="social-carousel" class="w-full relative py-8 scroll-mt-24">
       
       <!-- Section Header -->
       <div class="max-w-7xl mx-auto px-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
@@ -297,13 +378,9 @@
         </div>
       </div>
 
-      <!-- Edge Gradient Shadows for seamless fade -->
-      <div class="absolute left-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-r from-[#050505] to-transparent z-20 pointer-events-none"></div>
-      <div class="absolute right-0 top-0 bottom-0 w-8 sm:w-16 bg-gradient-to-l from-[#050505] to-transparent z-20 pointer-events-none"></div>
-
-      <!-- Native Scrolling Container (Hardware Accelerated) -->
-      <div class="w-full overflow-x-auto overflow-y-hidden no-scrollbar py-4 snap-x snap-mandatory" style="touch-action: pan-y; -webkit-overflow-scrolling: touch;" id="carousel-track">
-        <div class="flex gap-6 px-8 w-max" id="marquee-track">
+      <!-- TikTok Reel Snap Container (Hardware Accelerated 60FPS) -->
+      <div class="w-full overflow-x-auto overflow-y-hidden no-scrollbar py-6 cursor-grab active:cursor-grabbing select-none" id="carousel-track">
+        <div class="flex gap-5 sm:gap-6 w-max items-center" id="marquee-track">
           <!-- Injected dynamically by app.js -->
         </div>
       </div>
@@ -311,7 +388,7 @@
     </section>
 
     <!-- HORIZONTAL VIDEOS GRID -->
-    <section id="horizontal-portfolio" class="w-full relative py-8 fade-up delay-200 scroll-mt-24">
+    <section id="horizontal-portfolio" class="w-full relative py-8 scroll-mt-24">
       <div class="max-w-7xl mx-auto px-6 mb-8 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div>
           <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-panel text-xs text-blue-400 font-medium mb-3">
@@ -336,7 +413,7 @@
   </main>
 
   <!-- Contact Footer (Glass) -->
-  <footer id="contact" class="glass-panel border-t border-white/10 mt-12 py-20 relative overflow-hidden fade-up delay-300 scroll-mt-24">
+  <footer id="contact" class="glass-panel border-t border-white/10 mt-12 py-20 relative overflow-hidden scroll-mt-24">
     <div class="absolute inset-0 bg-gradient-to-t from-purple-900/10 to-transparent"></div>
     <div class="max-w-5xl mx-auto px-6 text-center space-y-10 relative z-10">
       <h2 class="text-4xl font-bold text-white tracking-tight">Ready to collaborate?</h2>
@@ -591,8 +668,8 @@
   </div>
 
   <!-- Scripts -->
-  <script src="assets/js/projects-data.js?v=46"></script>
-  <script src="assets/js/app.js?v=46"></script>
+  <script src="assets/js/projects-data.js?v=47"></script>
+  <script src="assets/js/app.js?v=47"></script>
 
   <!-- 3D Neon Tubes Cursor Trail Engine (Desktop Only) -->
   <script type="module">

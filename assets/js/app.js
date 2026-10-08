@@ -87,44 +87,60 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("ig-text").textContent = "@aymen_bm__";
   }
 
-  // 2. Build High-Performance Native Scroll Carousel
+  // 2. Build TikTok / Reels Social Media Snap Carousel
   window.isModalOpen = false;
-  const cards = [];
+  let isCarouselDragging = false;
+  const allCarouselCards = [];
   const marqueeTrack = document.getElementById("marquee-track");
+  const carouselTrackWrapper = document.getElementById("carousel-track");
   const videos = data.socialMediaVideos || [];
+  let activeReelIndex = -1;
 
-  function createCard(videoItem) {
+  function createCard(videoItem, index = 0) {
     const card = document.createElement("div");
-    card.className = "flex-shrink-0 w-[240px] sm:w-[280px] group relative rounded-[2rem] specular-card overflow-hidden hover:border-purple-500/50 transition-all duration-300 hover:scale-[1.02] cursor-pointer shadow-2xl carousel-card snap-start neon-tap";
-    
+    card.className = "flex-shrink-0 w-[260px] sm:w-[280px] group relative rounded-[2rem] specular-card overflow-hidden hover:border-purple-500/50 transition-all duration-300 cursor-pointer shadow-2xl carousel-card neon-tap";
+    card.dataset.reelIndex = index;
+
     const posterPath = videoItem.poster || '';
+    const videoSrc = videoItem.mobileSrc || videoItem.previewSrc || '';
 
     card.innerHTML = `
       <!-- Video Container with 9:16 Aspect Ratio -->
       <div class="aspect-[9/16] w-full bg-black relative overflow-hidden">
         
         <img 
-          class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 carousel-img" 
+          class="w-full h-full object-cover transition-transform duration-700 carousel-img" 
           src="${posterPath}" 
           alt="Video Thumbnail"
           loading="lazy">
 
-        <!-- Hover Overlay with Play Button (Glassy & Subtle) -->
-        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center z-10 pointer-events-none">
-          <div class="w-16 h-16 rounded-full bg-black/60 border border-white/20 text-white/80 group-hover:text-white group-hover:bg-white/20 flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-[0_4_20px_rgba(0,0,0,0.3)]">
-            <i data-lucide="play" class="w-6 h-6 ml-1 fill-current"></i>
+        <!-- Active Video Preview (Plays muted on active reel, 0 overhead for others) -->
+        <video 
+          class="absolute inset-0 w-full h-full object-cover opacity-0 transition-opacity duration-300 carousel-video-preview pointer-events-none" 
+          muted 
+          loop 
+          playsinline 
+          webkit-playsinline
+          preload="none"
+          data-src="${videoSrc}">
+        </video>
+
+        <!-- Center Play Button (Visible on inactive reels, subtle on active) -->
+        <div class="absolute inset-0 bg-black/10 group-hover:bg-black/25 transition-colors duration-300 flex items-center justify-center z-10 pointer-events-none">
+          <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-black/60 border border-white/20 text-white flex items-center justify-center transform scale-90 group-hover:scale-100 transition-all duration-300 shadow-[0_4_20px_rgba(0,0,0,0.4)] play-badge">
+            <i data-lucide="play" class="w-6 h-6 ml-0.5 fill-current"></i>
           </div>
         </div>
 
-        <!-- Top Gradient with Category Pill -->
+        <!-- Top Gradient with Category Pill & Live Playing indicator -->
         <div class="absolute top-0 inset-x-0 p-4 flex justify-between items-center bg-gradient-to-b from-black/80 via-black/20 to-transparent z-10 pointer-events-none">
-          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-black/50 text-white border border-white/10 shadow-sm">
+          <span class="px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-200 border border-purple-500/40 shadow-sm shadow-purple-500/20">
             ${videoItem.category}
           </span>
-          <div class="flex gap-1.5">
-            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center gap-1 shadow-sm">
-              <i data-lucide="play-circle" class="w-3 h-3"></i>
-              Original
+          <div class="flex items-center gap-1.5">
+            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 flex items-center gap-1 shadow-sm active-badge hidden">
+              <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+              Playing
             </span>
           </div>
         </div>
@@ -136,34 +152,48 @@ document.addEventListener("DOMContentLoaded", () => {
           </h3>
           <div class="flex items-center gap-2 mt-1.5 flex-wrap">
             ${(videoItem.tags || []).slice(0, 3).map(tag => `
-              <span class="text-xs text-gray-400 font-mono">#${tag}</span>
+              <span class="text-xs text-cyan-300/80 font-mono bg-cyan-500/10 px-2 py-0.5 rounded border border-cyan-500/20">#${tag}</span>
             `).join(" ")}
           </div>
         </div>
       </div>
     `;
 
-    // Click anywhere on the card to open the Master HD video
-    card.addEventListener("click", () => {
+    // Click anywhere on the card to open the Master HD video in modal (suppressed if dragged)
+    card.addEventListener("click", (e) => {
+      if (isCarouselDragging) {
+        e.preventDefault();
+        e.stopPropagation();
+        return;
+      }
       openModal(videoItem);
     });
 
     return card;
   }
 
-  // Populate the track with items twice for infinite auto-scrolling
+  // Populate carousel track
   if (marqueeTrack && videos.length > 0) {
-    videos.forEach(v => marqueeTrack.appendChild(createCard(v)));
-    videos.forEach(v => marqueeTrack.appendChild(createCard(v))); // Duplicate for seamless looping
+    videos.forEach((v, idx) => {
+      const card = createCard(v, idx);
+      marqueeTrack.appendChild(card);
+      allCarouselCards.push(card);
+    });
+    // Duplicate for seamless browsing
+    videos.forEach((v, idx) => {
+      const card = createCard(v, videos.length + idx);
+      marqueeTrack.appendChild(card);
+      allCarouselCards.push(card);
+    });
   }
 
   // 3. Build Horizontal Videos Grid
   const horizontalTrack = document.getElementById("horizontal-track");
   const hzVideos = data.horizontalVideos || [];
 
-  function createHorizontalCard(videoItem) {
+  function createHorizontalCard(videoItem, index = 0) {
     const card = document.createElement("div");
-    card.className = "w-full group relative rounded-3xl specular-card overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer shadow-2xl neon-tap";
+    card.className = `w-full group relative rounded-3xl specular-card overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:scale-[1.01] active:scale-[0.98] cursor-pointer shadow-2xl neon-tap`;
 
     const posterPath = videoItem.poster || '';
 
@@ -179,10 +209,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         <!-- Top Gradient with Category Pill -->
         <div class="absolute top-0 inset-x-0 p-3 sm:p-4 flex justify-between items-center bg-gradient-to-b from-black/80 via-black/30 to-transparent z-10 pointer-events-none">
-          <span class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-[#16161e] text-white border border-white/15 shadow-sm">
+          <span class="px-2.5 sm:px-3 py-1 rounded-full text-[11px] sm:text-xs font-semibold bg-purple-500/20 text-purple-200 border border-purple-500/40 shadow-sm shadow-purple-500/20">
             ${videoItem.category}
           </span>
-          <span class="px-2.5 py-0.5 rounded text-[10px] font-mono bg-blue-900/60 text-blue-300 border border-blue-500/30 flex items-center gap-1.5 shadow-sm">
+          <span class="px-2.5 py-0.5 rounded text-[10px] font-mono bg-blue-500/20 text-blue-300 border border-blue-500/35 flex items-center gap-1.5 shadow-sm">
             <i data-lucide="monitor" class="w-3 h-3"></i>
             16:9 Cut
           </span>
@@ -207,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
           </div>
           <div class="flex items-center gap-1.5 mt-1.5 flex-wrap">
             ${(videoItem.tags || []).slice(0, 3).map(tag => `
-              <span class="text-[10px] md:text-xs text-gray-300/80 font-mono bg-white/5 px-2 py-0.5 rounded border border-white/10">#${tag}</span>
+              <span class="text-[10px] md:text-xs text-blue-300/80 font-mono bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">#${tag}</span>
             `).join(" ")}
           </div>
         </div>
@@ -222,65 +252,288 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (horizontalTrack && hzVideos.length > 0) {
-    hzVideos.forEach(v => horizontalTrack.appendChild(createHorizontalCard(v)));
+    hzVideos.forEach((v, idx) => horizontalTrack.appendChild(createHorizontalCard(v, idx)));
   }
 
   if (window.lucide) window.lucide.createIcons();
 
   const isMobileClient = window.innerWidth < 768 || window.matchMedia('(pointer: coarse)').matches;
 
-  // 4. Smooth Infinite Auto-Scroll Logic (Desktop Only - Saves 100% CPU on mobile)
-  const carouselTrackWrapper = document.getElementById("carousel-track");
-  
-  if (carouselTrackWrapper && marqueeTrack && !isMobileClient) {
-    let scrollSpeed = 0.5; // pixels per frame
-    let isInteracting = false;
-    
-    // Pause auto-scroll on hover or touch
-    carouselTrackWrapper.addEventListener("mouseenter", () => isInteracting = true);
-    carouselTrackWrapper.addEventListener("mouseleave", () => isInteracting = false);
-    
-    // Check if the carousel is visible before animating to save CPU
-    let isVisible = false;
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        isVisible = entry.isIntersecting;
-      });
-    }, { threshold: 0 });
-    observer.observe(carouselTrackWrapper);
-
-    function animateScroll() {
-      if (!isInteracting && !window.isModalOpen && isVisible) {
-        carouselTrackWrapper.scrollLeft += scrollSpeed;
-        
-        // The track width is doubled because we appended items twice.
-        // We reset the scroll exactly halfway to create an infinite seamless loop.
-        if (carouselTrackWrapper.scrollLeft >= marqueeTrack.scrollWidth / 2) {
-          carouselTrackWrapper.scrollLeft -= marqueeTrack.scrollWidth / 2;
-        } else if (carouselTrackWrapper.scrollLeft <= 0) {
-          carouselTrackWrapper.scrollLeft += marqueeTrack.scrollWidth / 2;
-        }
-      }
-      requestAnimationFrame(animateScroll);
-    }
-    
-    // Start loop
-    animateScroll();
+  // Helpers to coordinate carousel previews with modal
+  function pauseAllCarouselPreviews() {
+    allCarouselCards.forEach(c => {
+      const v = c.querySelector('.carousel-video-preview');
+      if (v && !v.paused) v.pause();
+    });
   }
 
-  // Manual nudge buttons
+  function resumeActiveCarouselPreview() {
+    if (activeReelIndex >= 0 && activeReelIndex < allCarouselCards.length) {
+      const card = allCarouselCards[activeReelIndex];
+      const video = card?.querySelector('.carousel-video-preview');
+      if (video && !window.isModalOpen) {
+        video.play().catch(() => {});
+      }
+    }
+  }
+
+  // 4. TikTok Reel Snap Engine & Focus Tracking (Modern Web Guidance)
   const prevBtn = document.getElementById("carousel-prev");
   const nextBtn = document.getElementById("carousel-next");
 
-  if (prevBtn && carouselTrackWrapper) {
-    prevBtn.addEventListener("click", () => {
-      carouselTrackWrapper.scrollBy({ left: -344, behavior: "smooth" });
+  if (carouselTrackWrapper && marqueeTrack && allCarouselCards.length > 0) {
+    let isUserInteracting = false;
+    let isTouching = false;
+    let isMouseDown = false;
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let mouseStartX = 0;
+    let mouseScrollStart = 0;
+    let resumeTimeout = null;
+    let dragEndTimeout = null;
+    let autoStepTimer = null;
+    let isVisible = false;
+    let scrollTicking = false;
+
+    // Viewport Visibility Observer (Saves 100% CPU when scrolled past carousel)
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        isVisible = entry.isIntersecting;
+        if (isVisible) {
+          updateTikTokReelStates();
+        } else {
+          pauseAllCarouselPreviews();
+        }
+      });
+    }, { threshold: 0.1 });
+    observer.observe(carouselTrackWrapper);
+
+    function updateTikTokReelStates() {
+      if (!carouselTrackWrapper || allCarouselCards.length === 0) return;
+      const trackRect = carouselTrackWrapper.getBoundingClientRect();
+      const trackCenter = trackRect.left + trackRect.width / 2;
+
+      let closestCard = null;
+      let closestIdx = -1;
+      let minDistance = Infinity;
+
+      allCarouselCards.forEach((card, idx) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.left + cardRect.width / 2;
+        const dist = Math.abs(trackCenter - cardCenter);
+
+        if (dist < minDistance) {
+          minDistance = dist;
+          closestCard = card;
+          closestIdx = idx;
+        }
+      });
+
+      if (closestIdx !== -1 && closestIdx !== activeReelIndex) {
+        activeReelIndex = closestIdx;
+
+        allCarouselCards.forEach((card, idx) => {
+          const isCurrent = (idx === closestIdx);
+          const video = card.querySelector('.carousel-video-preview');
+          const activeBadge = card.querySelector('.active-badge');
+          const playBadge = card.querySelector('.play-badge');
+
+          if (isCurrent) {
+            card.classList.add('is-active-tiktok');
+            if (activeBadge) activeBadge.classList.remove('hidden');
+            if (playBadge) playBadge.classList.add('opacity-0', 'scale-75');
+
+            // Autoplay active reel preview
+            if (video && !window.isModalOpen && isVisible) {
+              if (!video.src && video.dataset.src) {
+                video.src = video.dataset.src;
+              }
+              video.play().then(() => {
+                video.style.opacity = '1';
+              }).catch(() => {
+                // Graceful fallback on restricted mobile power mode
+              });
+            }
+          } else {
+            card.classList.remove('is-active-tiktok');
+            if (activeBadge) activeBadge.classList.add('hidden');
+            if (playBadge) playBadge.classList.remove('opacity-0', 'scale-75');
+
+            // Pause inactive preview
+            if (video) {
+              video.pause();
+              video.style.opacity = '0';
+            }
+          }
+        });
+      }
+    }
+
+    // Passive throttled scroll listener for 60fps reel tracking
+    carouselTrackWrapper.addEventListener('scroll', () => {
+      isUserInteracting = true;
+      scheduleResume(1400);
+
+      if (!scrollTicking) {
+        requestAnimationFrame(() => {
+          updateTikTokReelStates();
+          scrollTicking = false;
+        });
+        scrollTicking = true;
+      }
+    }, { passive: true });
+
+    // Infinite wrap check when scroll rests
+    const handleScrollWrap = () => {
+      const halfWidth = marqueeTrack.scrollWidth / 2;
+      if (halfWidth > 0) {
+        if (carouselTrackWrapper.scrollLeft >= halfWidth * 1.7) {
+          carouselTrackWrapper.scrollLeft -= halfWidth;
+        } else if (carouselTrackWrapper.scrollLeft <= 15) {
+          carouselTrackWrapper.scrollLeft += halfWidth;
+        }
+      }
+      updateTikTokReelStates();
+      scheduleResume(1000);
+    };
+
+    if ('onscrollend' in window) {
+      carouselTrackWrapper.addEventListener('scrollend', handleScrollWrap);
+    } else {
+      let wrapTimer = null;
+      carouselTrackWrapper.addEventListener('scroll', () => {
+        clearTimeout(wrapTimer);
+        wrapTimer = setTimeout(handleScrollWrap, 180);
+      }, { passive: true });
+    }
+
+    function scheduleResume(delay = 1400) {
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+      resumeTimeout = setTimeout(() => {
+        if (!isTouching && !isMouseDown) {
+          isUserInteracting = false;
+        }
+      }, delay);
+    }
+
+    // Step to adjacent reel (smooth snap scroll)
+    function stepToReel(delta = 1) {
+      if (allCarouselCards.length === 0) return;
+      const targetIdx = (activeReelIndex + delta + allCarouselCards.length) % allCarouselCards.length;
+      const targetCard = allCarouselCards[targetIdx];
+      if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+      }
+    }
+
+    // Auto-step when user is idle (smoothly steps like a TikTok feed)
+    function scheduleAutoStep() {
+      if (autoStepTimer) clearTimeout(autoStepTimer);
+      autoStepTimer = setTimeout(() => {
+        if (!isUserInteracting && !isTouching && !isMouseDown && !window.isModalOpen && isVisible) {
+          stepToReel(1);
+        }
+        scheduleAutoStep();
+      }, 4200);
+    }
+    scheduleAutoStep();
+
+    // Touch Drag Handling (Mobile)
+    carouselTrackWrapper.addEventListener("touchstart", (e) => {
+      if (e.touches && e.touches.length > 0) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        isTouching = true;
+        isUserInteracting = true;
+        if (resumeTimeout) clearTimeout(resumeTimeout);
+      }
+    }, { passive: true });
+
+    carouselTrackWrapper.addEventListener("touchmove", (e) => {
+      if (!isTouching || !e.touches || e.touches.length === 0) return;
+      const dx = e.touches[0].clientX - touchStartX;
+      if (Math.abs(dx) > 8) {
+        isCarouselDragging = true;
+      }
+    }, { passive: true });
+
+    carouselTrackWrapper.addEventListener("touchend", () => {
+      isTouching = false;
+      if (isCarouselDragging) {
+        if (dragEndTimeout) clearTimeout(dragEndTimeout);
+        dragEndTimeout = setTimeout(() => {
+          isCarouselDragging = false;
+        }, 250);
+      }
+      scheduleResume(1400);
+    }, { passive: true });
+
+    carouselTrackWrapper.addEventListener("touchcancel", () => {
+      isTouching = false;
+      isCarouselDragging = false;
+      scheduleResume(800);
+    }, { passive: true });
+
+    // Desktop Mouse Drag Handling
+    carouselTrackWrapper.addEventListener("mouseenter", () => {
+      if (!isMouseDown) isUserInteracting = true;
     });
-  }
-  if (nextBtn && carouselTrackWrapper) {
-    nextBtn.addEventListener("click", () => {
-      carouselTrackWrapper.scrollBy({ left: 344, behavior: "smooth" });
+
+    carouselTrackWrapper.addEventListener("mouseleave", () => {
+      if (!isMouseDown) isUserInteracting = false;
     });
+
+    carouselTrackWrapper.addEventListener("mousedown", (e) => {
+      if (e.button !== 0) return;
+      isMouseDown = true;
+      isUserInteracting = true;
+      mouseStartX = e.pageX - carouselTrackWrapper.offsetLeft;
+      mouseScrollStart = carouselTrackWrapper.scrollLeft;
+      if (resumeTimeout) clearTimeout(resumeTimeout);
+    });
+
+    window.addEventListener("mouseup", () => {
+      if (isMouseDown) {
+        isMouseDown = false;
+        if (isCarouselDragging) {
+          if (dragEndTimeout) clearTimeout(dragEndTimeout);
+          dragEndTimeout = setTimeout(() => {
+            isCarouselDragging = false;
+          }, 250);
+        }
+        scheduleResume(1400);
+      }
+    });
+
+    carouselTrackWrapper.addEventListener("mousemove", (e) => {
+      if (!isMouseDown) return;
+      e.preventDefault();
+      const x = e.pageX - carouselTrackWrapper.offsetLeft;
+      const walk = (x - mouseStartX) * 1.5;
+      if (Math.abs(walk) > 8) {
+        isCarouselDragging = true;
+      }
+      carouselTrackWrapper.scrollLeft = mouseScrollStart - walk;
+    });
+
+    // Prev / Next Controls
+    if (prevBtn) {
+      prevBtn.addEventListener("click", () => {
+        isUserInteracting = true;
+        stepToReel(-1);
+        scheduleResume(1500);
+      });
+    }
+    if (nextBtn) {
+      nextBtn.addEventListener("click", () => {
+        isUserInteracting = true;
+        stepToReel(1);
+        scheduleResume(1500);
+      });
+    }
+
+    // Initial state calculation
+    setTimeout(updateTikTokReelStates, 150);
   }
 
   // 4. Custom Video Modal with Dual Architecture (Vertical Reels & Horizontal Theater)
@@ -636,6 +889,9 @@ document.addEventListener("DOMContentLoaded", () => {
     isCurrentHorizontal = isHorizontal;
     currentItemData = item;
 
+    // Pause all carousel preview videos while modal is open
+    pauseAllCarouselPreviews();
+
     // Free GPU for video playback
     const canvasBg = document.getElementById("canvas");
     if (canvasBg) canvasBg.style.display = 'none';
@@ -813,6 +1069,9 @@ document.addEventListener("DOMContentLoaded", () => {
     if (canvasBg && window.matchMedia('(min-width: 768px)').matches) {
       canvasBg.style.display = 'block';
     }
+
+    // Resume carousel preview
+    resumeActiveCarouselPreview();
   }
 
   // --- BUTTON EVENT LISTENERS --- //
@@ -1086,7 +1345,9 @@ document.addEventListener("DOMContentLoaded", () => {
     window.lucide.createIcons();
   }
 
-  // 6. Smooth Background Parallax on mouse move (Desktop only)
+
+
+  // 8. Smooth Background Parallax on mouse move (Desktop only)
   const bgImg = document.getElementById("dynamic-bg-img");
   const hasMousePointer = window.matchMedia('(pointer: fine)').matches;
   if (bgImg && hasMousePointer) {
